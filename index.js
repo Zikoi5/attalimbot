@@ -24,8 +24,12 @@ bot.command("/darslar", (ctx) => {
         [
           Markup.button.callback("📖 Dars 1", "dars_1"),
           Markup.button.callback("📖 Dars 2", "dars_2"),
+        ]
+        [
           Markup.button.callback("📖 Dars 3", "dars_3"),
           Markup.button.callback("📖 Dars 4", "dars_4"),
+        ],
+        [
           Markup.button.callback("📖 Dars 5", "dars_5")
         ]
         // [Markup.button.callback("📖 Dars test", "dars_test")]
