@@ -1,6 +1,8 @@
 const { Telegraf, Markup } = require("telegraf")
-require("dotenv").config()
+require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` })
+
 const helpjs = require("./help.js")
+const lessons = require("./lessons/top_5/index.js")
 
 const bot = new Telegraf(process.env.BOT_TOKEN)
 
@@ -38,7 +40,17 @@ bot.command("/darslar", (ctx) => {
   }
 })
 
-bot.action("dars_test", async (ctx) => {
+bot.command("test", (ctx) => {
+  return ctx.reply(
+    "Special buttons keyboard",
+    Markup.keyboard([
+      Markup.button.contactRequest("Send contact"),
+      Markup.button.locationRequest("Send location")
+    ]).resize()
+  )
+})
+
+bot.on("dars_test", async (ctx) => {
   const t = await ctx.reply("loading...")
 
   setTimeout(() => {
@@ -47,13 +59,31 @@ bot.action("dars_test", async (ctx) => {
   }, 1000)
 })
 
+bot.on("contact", async (ctx) => {
+  // console.log("contact handler ctx", JSON.stringify(ctx.update.message.contact))
+  await ctx.reply("Received contact:")
+  ctx.reply(JSON.stringify(ctx.update.message.contact, null, 2))
+})
+
+bot.on("document", async (ctx) => {
+  const doc = JSON.stringify(ctx.update.message.document, null, 2)
+  // console.log("contact handler ctx", doc)
+  await ctx.reply(`Received document: ${doc}`)
+})
+
+// bot.on("edited_message", (ctx) => {
+//   ctx.reply("Вы успешно изменили сообщение")
+// })
+
 function replyLesson({ lesson, number }) {
   try {
     bot.action(lesson, async (ctx) => {
       const { message_id } = await ctx.reply("Yuklanmoqda...")
-      await ctx.replyWithDocument({
-        source: `./assets/pdf/${number}-дарс.pdf`
-      })
+      const replyUserId = ctx?.update?.callback_query?.from?.id
+
+      const lessonFileByNumber = lessons[`dars_${number}`]
+      await ctx.telegram.sendDocument(replyUserId, lessonFileByNumber)
+
       await ctx.answerCbQuery()
       ctx.deleteMessage(message_id)
     })
@@ -67,7 +97,9 @@ Array.from({ length: 5 }).forEach((_, index) => {
   replyLesson({ lesson: `dars_${number}`, number })
 })
 
-bot.launch()
+bot.launch().then(() => {
+  console.log(`Bot started. @${bot.botInfo.username}`)
+})
 
 // Enable graceful stop
 process.once("SIGINT", () => bot.stop("SIGINT"))
