@@ -74,7 +74,7 @@ bot.command("kalimalar", async (ctx) => {
         MUFASSAL_KALIMASI.title,
       ],
       {
-        wrap: (btn, index, currentRow) => currentRow.length >= (index + 1) / 2,
+        columns: 2,
       }
     )
   );
