@@ -15,6 +15,7 @@
     "telegraf": "^4.7.0"
   },
   "devDependencies": {
+    "eslint": "^8.15.0",
     "nodemon": "^2.0.15"
   }
 }
