@@ -1,9 +1,9 @@
 require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
 
 const isDev = process.env.NODE_ENV === "development";
+
 const helpjs = require("./help.js");
 const lessons = require("./lessons/top_5/index.js");
-
 const harflar = require("./scenes/harflar.js");
 const kalimalar = require("./scenes/kalimalar.js");
 
@@ -16,9 +16,9 @@ const {
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
-// if (isDev) {
-//   bot.use(Telegraf.log());
-// }
+if (isDev) {
+  bot.use(Telegraf.log());
+}
 
 bot.start(async (ctx) => {
   await ctx.reply(

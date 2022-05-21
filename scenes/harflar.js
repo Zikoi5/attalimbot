@@ -8,27 +8,22 @@ const {
   harflarKeys,
   harflarTitles,
 } = require("../common/harflar/files.js");
-const messagesRemover = require("../utils/messages-remover.js");
 
 const harflarScene = new BaseScene("HARFLAR_SCENE");
 
 const ILTIMOS_HARF_TANLANG = "Қуйидаги ҳарфлардан бирини танланг";
 const { BACK_BUTTON } = require("../common/buttons/back-button.js");
+const { removeCurrMessages } = require("../utils/request-chain-methods.js");
 
 harflarKeys.forEach((key) => {
-  const fn = function (ctx) {
-    messagesRemover({ count: +ctx.scene.state.post_count, ctx });
+  const fn = async function (ctx) {
     harflar[key].handler(ctx);
-
-    if (ctx.scene.state.post_count == 1) {
-      ctx.scene.state.post_count = 3;
-    }
   };
+
   harflarScene.hears(harflar[key].title, fn);
 });
 
 harflarScene.enter(async (ctx) => {
-  ctx.scene.state.post_count = 1;
   const res = await ctx.reply(
     ILTIMOS_HARF_TANLANG,
     Markup.keyboard([BACK_BUTTON, ...harflarTitles, BACK_BUTTON], {
@@ -42,7 +37,8 @@ harflarScene.enter(async (ctx) => {
 });
 
 harflarScene.leave((ctx) => {
-  messagesRemover({ count: +ctx.scene.state.post_count || 0, ctx });
+  console.log("messages_to_delete", ctx.scene.state.messages_to_delete);
+  return removeCurrMessages(ctx);
 });
 
 harflarScene.hears(BACK_BUTTON, async (ctx) => {
@@ -50,6 +46,7 @@ harflarScene.hears(BACK_BUTTON, async (ctx) => {
     reply_markup: { remove_keyboard: true },
   });
 
+  await ctx.deleteMessage(ctx.message.message_id);
   await ctx.deleteMessage(message_id);
   await ctx.deleteMessage(ctx.scene.state.enter_text_message_id);
   ctx.scene.leave("HARFLAR_SCENE");

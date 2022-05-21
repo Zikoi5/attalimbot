@@ -13,11 +13,10 @@ const {
 
 const KALIMANI_TANLANG = "Калималардан бирини танланг";
 
-const messagesRemover = require("../utils/messages-remover.js");
 const { BACK_BUTTON } = require("../common/buttons/back-button.js");
+const { removeCurrMessages } = require("../utils/request-chain-methods.js");
 
 kalimalarScene.enter(async (ctx) => {
-  ctx.scene.state.post_count = 1;
   const res = await ctx.reply(
     KALIMANI_TANLANG,
     Markup.keyboard([...kalimalarTitles, BACK_BUTTON], {
@@ -31,7 +30,8 @@ kalimalarScene.enter(async (ctx) => {
 });
 
 kalimalarScene.leave((ctx) => {
-  messagesRemover({ count: +ctx.scene.state.post_count || 0, ctx });
+  console.log("messages_to_delete", ctx.scene.state.messages_to_delete);
+  return removeCurrMessages(ctx);
 });
 
 kalimalarScene.hears(BACK_BUTTON, async (ctx) => {
@@ -39,6 +39,7 @@ kalimalarScene.hears(BACK_BUTTON, async (ctx) => {
     reply_markup: { remove_keyboard: true },
   });
 
+  await ctx.deleteMessage(ctx.message.message_id);
   await ctx.deleteMessage(message_id);
   await ctx.deleteMessage(ctx.scene.state.enter_text_message_id);
   ctx.scene.leave("KALIMALAR_SCENE");
@@ -46,13 +47,9 @@ kalimalarScene.hears(BACK_BUTTON, async (ctx) => {
 
 kalimalarKeys.forEach((key) => {
   const fn = function (ctx) {
-    messagesRemover({ count: +ctx.scene.state.post_count, ctx });
     kalimalar[key].handler(ctx);
-
-    if (ctx.scene.state.post_count == 1) {
-      ctx.scene.state.post_count = 4;
-    }
   };
+
   kalimalarScene.hears(kalimalar[key].title, fn);
 });
 
