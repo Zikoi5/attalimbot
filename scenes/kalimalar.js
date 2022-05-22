@@ -29,9 +29,10 @@ kalimalarScene.enter(async (ctx) => {
   return res;
 });
 
-kalimalarScene.leave((ctx) => {
-  console.log("messages_to_delete", ctx.scene.state.messages_to_delete);
-  return removeCurrMessages(ctx);
+kalimalarScene.leave(async (ctx) => {
+  // console.log("messages_to_delete", ctx.scene.state.messages_to_delete);
+  await removeCurrMessages(ctx);
+  ctx.scene.enter("MAIN_SCENE");
 });
 
 kalimalarScene.hears(BACK_BUTTON, async (ctx) => {
@@ -39,9 +40,9 @@ kalimalarScene.hears(BACK_BUTTON, async (ctx) => {
     reply_markup: { remove_keyboard: true },
   });
 
-  await ctx.deleteMessage(ctx.message.message_id);
-  await ctx.deleteMessage(message_id);
-  await ctx.deleteMessage(ctx.scene.state.enter_text_message_id);
+  await ctx.deleteMessage(ctx.message.message_id).catch(() => {});
+  await ctx.deleteMessage(message_id).catch(() => {});
+  await ctx.deleteMessage(ctx.scene.state.enter_text_message_id).catch(() => {});
   ctx.scene.leave("KALIMALAR_SCENE");
 });
 

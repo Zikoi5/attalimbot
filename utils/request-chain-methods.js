@@ -11,7 +11,11 @@ async function removeCurrMessages(ctx) {
     Array.isArray(ctx.scene.state.messages_to_delete)
   ) {
     for (const message_id of ctx.scene.state.messages_to_delete) {
-      await ctx.deleteMessage(message_id);
+      if (message_id) {
+        await ctx.deleteMessage(message_id).catch((err) => {
+          console.log("Error on delete message", err);
+        });
+      }
     }
 
     return Promise.resolve();

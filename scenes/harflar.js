@@ -12,6 +12,7 @@ const {
 const harflarScene = new BaseScene("HARFLAR_SCENE");
 
 const ILTIMOS_HARF_TANLANG = "Қуйидаги ҳарфлардан бирини танланг";
+
 const { BACK_BUTTON } = require("../common/buttons/back-button.js");
 const { removeCurrMessages } = require("../utils/request-chain-methods.js");
 
@@ -36,9 +37,10 @@ harflarScene.enter(async (ctx) => {
   return res;
 });
 
-harflarScene.leave((ctx) => {
-  console.log("messages_to_delete", ctx.scene.state.messages_to_delete);
-  return removeCurrMessages(ctx);
+harflarScene.leave(async (ctx) => {
+  // console.log("messages_to_delete", ctx.scene.state.messages_to_delete);
+  await removeCurrMessages(ctx);
+  ctx.scene.enter("MAIN_SCENE");
 });
 
 harflarScene.hears(BACK_BUTTON, async (ctx) => {
@@ -46,9 +48,11 @@ harflarScene.hears(BACK_BUTTON, async (ctx) => {
     reply_markup: { remove_keyboard: true },
   });
 
-  await ctx.deleteMessage(ctx.message.message_id);
-  await ctx.deleteMessage(message_id);
-  await ctx.deleteMessage(ctx.scene.state.enter_text_message_id);
+  await ctx.deleteMessage(ctx.message.message_id).catch(() => {});
+  await ctx.deleteMessage(message_id).catch(() => {});
+  await ctx
+    .deleteMessage(ctx.scene.state.enter_text_message_id)
+    .catch(() => {});
   ctx.scene.leave("HARFLAR_SCENE");
 });
 

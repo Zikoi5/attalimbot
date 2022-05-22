@@ -1,9 +1,16 @@
 const text = `
 /start - Ботни ишга тушириш
-/darslar - Дарслар рўйхати
+/darslar - Дарслар
 /harflar - Ҳарфлар
-/kalimalar - Калималар рўйхати
+/kalimalar - Калималар
 /help - Ёрдам
-`
+`;
 
-module.exports = text
+const commandsList = text
+  .match(/(- )+(.*)/g)
+  .join(",")
+  .replace(/(- )/g, "")
+  .split(",")
+  .slice(1, -1);
+
+module.exports = { helpTextLines: text, commandsList };

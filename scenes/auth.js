@@ -1,35 +1,66 @@
 const {
-  // eslint-disable-next-line no-unused-vars
-  Scenes: { Stage, BaseScene },
+  Markup,
+  Scenes: { WizardScene },
 } = require("telegraf");
-// const { enter, leave } = Stage;
 
-const authScene = new BaseScene("auth");
+const authScene = new WizardScene(
+  "AUTH_SCENE",
+  (ctx) => {
+    ctx.reply("Исмингизни киритинг", {
+      reply_markup: { remove_keyboard: true },
+    });
 
-authScene.enter(async (ctx) => {
-  await ctx.reply("echo scene");
-});
+    ctx.wizard.state.contactData = {};
+    return ctx.wizard.next();
+  },
+  (ctx) => {
+    // validation example
+    if (ctx.message.text.length < 2) {
+      ctx.reply("Илтимос, исмингизни тўлиқ ёзинг!");
+      return;
+    }
 
-authScene.leave((ctx) => ctx.reply("exiting echo scene"));
-authScene.hears("de", (ctx) => ctx.reply("Deeee"));
-// authScene.on("text", (ctx) => ctx.reply(ctx.message.text));
-authScene.on("message", (ctx) => ctx.reply("Only text messages please"));
+    ctx.wizard.state.contactData.first_name = ctx.message.text;
+
+    ctx.reply("Фамилиянгизни киритинг");
+    return ctx.wizard.next();
+  },
+  async (ctx) => {
+    if (ctx.message.text.length < 2) {
+      ctx.reply("Илтимос, фамилиянгизни тўлиқ ёзинг");
+      return;
+    }
+
+    ctx.wizard.state.contactData.last_name = ctx.message.text;
+
+    ctx.reply(
+      '"Телефон рақамини жўнатиш" тугмасини босинг',
+      Markup.keyboard([
+        Markup.button.contactRequest("Телефон рақамини жўнатиш"),
+      ])
+        .oneTime()
+        .resize()
+    );
+
+    return ctx.wizard.next();
+  },
+  async (ctx) => {
+    try {
+      const contact = ctx?.message?.contact;
+      if (!contact?.user_id || ctx.message.from.id !== contact.user_id) {
+        ctx.reply("Илтимос, телеграм ишлатаётган рақамингизни жўнатинг");
+        return;
+      }
+      ctx.wizard.state.contactData.contact = contact;
+      // const data = JSON.stringify(ctx.wizard.state.contactData, null, 2);
+
+      // ctx.reply(data, { reply_markup: { remove_keyboard: true } });
+      return ctx.scene.enter("MAIN_SCENE", ctx.wizard.state.contactData);
+      // return ctx.scene.leave("AUTH_SCENE");
+    } catch (error) {
+      console.log("Wizard contact error", error);
+    }
+  }
+);
 
 module.exports = authScene;
-
-// const { enter, leave } = Stage;
-// // Greeter scene
-// const greeterScene = new BaseScene("greeter");
-// greeterScene.enter((ctx) => ctx.reply("Hi"));
-// greeterScene.leave((ctx) => ctx.reply("Bye"));
-// greeterScene.hears("hi", enter("greeter"));
-// greeterScene.hears("quit", leave());
-// // greeterScene.on("message", (ctx) => ctx.replyWithMarkdown("Send `hi`"));
-// // Echo scene
-// const echoScene = new BaseScene("echo");
-// echoScene.enter((ctx) => ctx.reply("echo scene"));
-// echoScene.leave((ctx) => ctx.reply("exiting echo scene"));
-// echoScene.hears("de", (ctx) => ctx.reply("Deeee"));
-// echoScene.command("back", leave());
-// // echoScene.on("text", (ctx) => ctx.reply(ctx.message.text));
-// echoScene.on("message", (ctx) => ctx.reply("Only text messages please"));
