@@ -171,10 +171,9 @@ bot.on("message", (ctx) => {
   }
 });
 
-module.exports.handler = async function (event) {
+exports.handler = async function (event) {
   try {
-    const data = JSON.parse(event.body)
-    await bot.handleUpdate(data);
+    await bot.handleUpdate(event);
     return {
       statusCode: 200,
       body: '',
