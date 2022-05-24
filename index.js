@@ -171,13 +171,16 @@ bot.on("message", (ctx) => {
   }
 });
 
-exports.handler = async function (event) {
+bot.telegram.setWebhook(process.env.BOT_WEBHOOK_URL);
+
+
+exports.handler = async function (event, context, callback) {
   try {
-    await bot.handleUpdate(event);
-    return {
+    bot.handleUpdate(event);
+    return callback(null, {
       statusCode: 200,
       body: '',
-    };
+    });
   } catch (err) {
     Sentry.captureException(err);
   }
