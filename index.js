@@ -2,7 +2,7 @@ require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
 
 const isDev = process.env.NODE_ENV === "development";
 
-const ADMIN_USER_ID = 2082926;
+const Sentry = require("@sentry/node");
 
 const { helpTextLines, commandsList } = require("./help.js");
 
@@ -23,9 +23,19 @@ const {
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
-// if (isDev) {
-//   bot.use(Telegraf.log());
-// }
+Sentry.init({ dsn: process.env.SENTRY_DNS });
+
+bot.catch((err) => {
+  Sentry.captureException(err);
+});
+
+if (isDev) {
+  bot.use(Telegraf.log());
+
+  bot.launch().then(() => {
+    console.log(`Bot started. @${bot.botInfo.username}`);
+  });
+}
 
 bot.start(async (ctx) => {
   await ctx.reply(
@@ -161,20 +171,18 @@ bot.on("message", (ctx) => {
   }
 });
 
-bot.launch().then(() => {
-  console.log(`Bot started. @${bot.botInfo.username}`);
-});
-
-// error handling
-bot.catch((err, ctx) => {
-  return bot.telegram.sendMessage(
-    ADMIN_USER_ID,
-    `En error occured:\n`
-      .concat(JSON.stringify(ctx.message, null, 2))
-      .concat("\n")
-      .concat(err)
-  );
-});
+module.exports.handler = async function (event) {
+  try {
+    const data = JSON.parse(event.body)
+    await bot.handleUpdate(data);
+    return {
+      statusCode: 200,
+      body: '',
+    };
+  } catch (err) {
+    Sentry.captureException(err);
+  }
+};
 
 // Enable graceful stop
 process.once("SIGINT", () => bot.stop("SIGINT"));
