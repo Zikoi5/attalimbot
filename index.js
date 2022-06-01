@@ -4,6 +4,7 @@ const isDev = process.env.NODE_ENV === "development";
 
 const Sentry = require("@sentry/node");
 
+// eslint-disable-next-line no-unused-vars
 const { helpTextLines, commandsList } = require("./help.js");
 
 /* Scenes */
@@ -21,21 +22,44 @@ const {
   Scenes: { Stage },
 } = require("telegraf");
 
+const mongodb = require("./mongo/index.js");
+
 const bot = new Telegraf(process.env.BOT_TOKEN);
+
+const deleteMessages = require("./utils/messages-remover.js");
 
 Sentry.init({ dsn: process.env.SENTRY_DNS });
 
 bot.catch((err) => {
+  if (isDev) {
+    console.error("Catched error", err);
+    return;
+  }
+
   Sentry.captureException(err);
 });
 
 if (isDev) {
-  bot.use(Telegraf.log());
+  (async function () {
+    // bot.use(Telegraf.log());
 
-  bot.launch().then(() => {
-    console.log(`Bot started. @${bot.botInfo.username}`);
-  });
+    await mongodb();
+
+    bot.launch().then(() => {
+      console.log(`Bot started. @${bot.botInfo.username}`);
+    });
+  })();
 }
+
+const stage = new Stage([
+  MAIN_SCENE,
+  AUTH_SCENE,
+  HARFLAR_SCENE,
+  KALIMALAR_SCENE,
+]);
+
+bot.use(session());
+bot.use(stage.middleware());
 
 bot.start(async (ctx) => {
   await ctx.reply(
@@ -43,18 +67,11 @@ bot.start(async (ctx) => {
       ctx.message?.from?.first_name ||
       ctx.message?.from?.last_name ||
       ctx.message?.from?.username
-    }`,
-    Markup.keyboard(commandsList, {
-      columns: 2,
-    }).resize()
+    }`
   );
 
   ctx.reply(helpTextLines);
-  // ctx.scene.enter("MAIN_SCENE");
-});
-
-bot.hears("session", (ctx) => {
-  ctx.replyWithHTML(`<pre>${(ctx.session, null, 2)}</pre>`);
+  ctx.scene.enter("MAIN_SCENE");
 });
 
 bot.help((ctx) => ctx.reply(helpTextLines));
@@ -86,9 +103,11 @@ bot.command("test", (ctx) => {
 bot.command("delete", async (ctx) => {
   if (isDev) {
     // const replyUserId = ctx?.update?.message?.chat?.id;
-    return ctx.reply(
-      `ctx.update.chat.id \n\`${JSON.stringify(ctx.message, null, 2)}\``
-    );
+    // await ctx.reply(
+    //   `ctx.update.chat.id \n\`${JSON.stringify(ctx.message, null, 2)}\``
+    // );
+
+    deleteMessages({ count: 100, ctx });
     // await ctx?.deleteMessage?.(replyUserId);
     // ctx.messages.deleteHistory()
   }
@@ -115,16 +134,6 @@ Array.from({ length: 5 }).forEach((_, index) => {
   const number = index + 1;
   replyLesson({ lesson: `dars_${number}`, number });
 });
-
-const stage = new Stage([
-  MAIN_SCENE,
-  AUTH_SCENE,
-  HARFLAR_SCENE,
-  KALIMALAR_SCENE,
-]);
-
-bot.use(session());
-bot.use(stage.middleware());
 
 bot.command("harflar", (ctx) => ctx.scene.enter("HARFLAR_SCENE"));
 bot.hears("Ҳарфлар", (ctx) => ctx.scene.enter("HARFLAR_SCENE"));
@@ -158,28 +167,14 @@ function darslarHandler(ctx) {
   }
 }
 
-bot.on("message", (ctx) => {
-  if (isDev) {
-    // console.log("ctx.scene", ctx.scene);
-    console.log("ctx.session", ctx.session.current || "Scene empty");
-    // console.log("ctx.message", ctx.message);
-  }
-
-  //Fixme
-  if (!ctx.session.current && ctx.message.text !== "Дарслар") {
-    return ctx.scene.enter("MAIN_SCENE");
-  }
-});
-
 bot.telegram.setWebhook(process.env.BOT_WEBHOOK_URL);
-
 
 exports.handler = async function (event, context, callback) {
   try {
     bot.handleUpdate(event);
     return callback(null, {
       statusCode: 200,
-      body: '',
+      body: "",
     });
   } catch (err) {
     Sentry.captureException(err);
