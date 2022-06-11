@@ -1,6 +1,9 @@
 const FROM_USER_ID = 2082926;
 
-const { sendArgsToChain } = require("../../utils/request-chain-methods.js");
+const {
+  sendArgsToChain,
+  replyPropsToList,
+} = require("../../utils/request-chain-methods.js");
 
 const kalimalar = {
   TOYYIBA_KALIMASI: {
@@ -9,23 +12,11 @@ const kalimalar = {
       const replyUserId = ctx?.update?.message?.from?.id;
 
       sendArgsToChain({
-        replyList: [
-          {
-            reply_user_id: replyUserId,
-            from: FROM_USER_ID,
-            message_id: 335,
-          },
-          {
-            reply_user_id: replyUserId,
-            from: FROM_USER_ID,
-            message_id: 336,
-          },
-          {
-            reply_user_id: replyUserId,
-            from: FROM_USER_ID,
-            message_id: 337,
-          },
-        ],
+        replyList: replyPropsToList({
+          replyUserId,
+          FROM_USER_ID,
+          messageIdList: [335, 336, 337],
+        }),
         ctx,
       });
 

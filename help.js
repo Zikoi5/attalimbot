@@ -3,6 +3,7 @@ const text = `
 /darslar - Дарслар
 /harflar - Ҳарфлар
 /kalimalar - Калималар
+/tahlil - Талаффуз таҳлили
 /help - Ёрдам
 `;
 

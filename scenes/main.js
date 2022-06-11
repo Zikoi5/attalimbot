@@ -3,16 +3,26 @@ const {
   Scenes: { BaseScene },
 } = require("telegraf");
 
-const { commandsList } = require("../help.js");
+// const { commandsList } = require("../help.js");
 
 // console.log("commandsList", commandsList);
 
 const mainScene = new BaseScene("MAIN_SCENE");
 
+const BUTTONS = {
+  DARSLAR_BTN: "📜 Дарслар",
+  HARFLAR_BTN: "🔤 Ҳарфлар",
+  KALIMALAR_BTN: "📄 Калималар",
+  TALAFFUZ_BTN: "🔬 Калима топшириш",
+  FURQON_BTN: "📔 Нур",
+};
+
+const BUTTONS_LIST = Object.values(BUTTONS);
+
 mainScene.enter(async (ctx) => {
   const { message_id } = await ctx.reply(
     "Асосий бўлим",
-    Markup.keyboard(commandsList, {
+    Markup.keyboard(BUTTONS_LIST, {
       columns: 2,
     }).resize()
   );
@@ -21,7 +31,7 @@ mainScene.enter(async (ctx) => {
 });
 
 mainScene.hears("s", (ctx) => {
-  ctx.replyWithHTML(
+  return ctx.replyWithHTML(
     `<pre>${
       (ctx.session && JSON.stringify(ctx.session, null, 2)) ||
       "Session is empty"
@@ -33,4 +43,4 @@ mainScene.leave((ctx) => {
   return ctx.deleteMessage(ctx.scene.state.welcome_msg_id).catch(() => {});
 });
 
-module.exports = mainScene;
+module.exports = { MAIN_SCENE: mainScene, MAIN_BUTTONS: BUTTONS };

@@ -4,14 +4,19 @@ const isDev = process.env.NODE_ENV === "development";
 
 const Sentry = require("@sentry/node");
 
-// eslint-disable-next-line no-unused-vars
-const { helpTextLines, commandsList } = require("./help.js");
+const { helpTextLines } = require("./help.js");
+const { BACK_BUTTON } = require("./common/buttons/back-button.js");
 
 /* Scenes */
 const AUTH_SCENE = require("./scenes/auth.js");
-const MAIN_SCENE = require("./scenes/main.js");
+const { MAIN_SCENE, MAIN_BUTTONS } = require("./scenes/main.js");
 const HARFLAR_SCENE = require("./scenes/harflar.js");
 const KALIMALAR_SCENE = require("./scenes/kalimalar.js");
+const TALAFFUZ_SCENE = require("./scenes/tahlilul-tilavat.js");
+const FURQON_SCENE = require("./scenes/furqon.js");
+
+/* Middlewares */
+const userChecker = require("./middlewares/user-checker.js");
 
 const lessons = require("./lessons/top_5/index.js");
 
@@ -41,7 +46,7 @@ bot.catch((err) => {
 
 if (isDev) {
   (async function () {
-    // bot.use(Telegraf.log());
+    bot.use(Telegraf.log());
 
     await mongodb();
 
@@ -56,10 +61,13 @@ const stage = new Stage([
   AUTH_SCENE,
   HARFLAR_SCENE,
   KALIMALAR_SCENE,
+  TALAFFUZ_SCENE,
+  FURQON_SCENE,
 ]);
 
 bot.use(session());
 bot.use(stage.middleware());
+bot.use(userChecker);
 
 bot.start(async (ctx) => {
   await ctx.reply(
@@ -83,10 +91,6 @@ bot.on("document", async (ctx) => {
     await ctx.reply(`Received document: ${doc}`);
   }
 });
-
-// bot.on("edited_message", (ctx) => {
-//   ctx.reply("Вы успешно изменили сообщение")
-// })
 
 bot.command("test", (ctx) => {
   if (isDev) {
@@ -136,15 +140,24 @@ Array.from({ length: 5 }).forEach((_, index) => {
 });
 
 bot.command("harflar", (ctx) => ctx.scene.enter("HARFLAR_SCENE"));
-bot.hears("Ҳарфлар", (ctx) => ctx.scene.enter("HARFLAR_SCENE"));
-
 bot.command("kalimalar", (ctx) => ctx.scene.enter("KALIMALAR_SCENE"));
-bot.hears("Калималар", (ctx) => ctx.scene.enter("KALIMALAR_SCENE"));
+bot.command("darslar", darslarHandler);
+
+bot.hears(MAIN_BUTTONS.HARFLAR_BTN, (ctx) => ctx.scene.enter("HARFLAR_SCENE"));
+bot.hears(MAIN_BUTTONS.KALIMALAR_BTN, (ctx) =>
+  ctx.scene.enter("KALIMALAR_SCENE")
+);
+bot.hears(MAIN_BUTTONS.TALAFFUZ_BTN, (ctx) =>
+  ctx.scene.enter("TALAFFUZ_SCENE")
+);
+
+bot.hears(MAIN_BUTTONS.DARSLAR_BTN, darslarHandler);
+
+bot.hears(MAIN_BUTTONS.FURQON_BTN, (ctx) => ctx.scene.enter("FURQON_SCENE"));
+
+bot.hears(BACK_BUTTON, (ctx) => ctx.scene.enter("MAIN_SCENE"));
 
 bot.command("auth", (ctx) => ctx.scene.enter("AUTH_SCENE"));
-
-bot.command("darslar", darslarHandler);
-bot.hears("Дарслар", darslarHandler);
 
 function darslarHandler(ctx) {
   try {
@@ -166,6 +179,22 @@ function darslarHandler(ctx) {
     console.error(err);
   }
 }
+
+// let lmessages = [];
+
+bot.on("message", (ctx) => {
+  // const message_id = ctx.message.message_id;
+  // lmessages.push(message_id);
+
+  // console.log("message_id", message_id);
+  //Fixme
+  if (
+    !ctx.session.current &&
+    ![MAIN_BUTTONS.DARSLAR_BTN, "Darslar"].includes(ctx.message.text)
+  ) {
+    return ctx.scene.enter("MAIN_SCENE");
+  }
+});
 
 bot.telegram.setWebhook(process.env.BOT_WEBHOOK_URL);
 
