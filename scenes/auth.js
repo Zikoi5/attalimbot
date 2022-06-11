@@ -83,14 +83,14 @@ const authScene = new WizardScene(
       reply_markup: { remove_keyboard: true },
     });
 
-    ctx.wizard.state.contactData = {};
+    ctx.wizard.state.contactData = { telegram_chat_id: ctx.message?.from?.id };
     return ctx.wizard.next();
   },
 
   // Фамилия
   (ctx) => {
     // validation example
-    if (ctx.message.text.length < 2) {
+    if (!ctx.message?.text || ctx.message?.text?.length < 2) {
       ctx.reply("Илтимос, исмингизни тўлиқ ёзинг!");
       return;
     }
@@ -103,7 +103,7 @@ const authScene = new WizardScene(
 
   // телефон рақам
   async (ctx) => {
-    if (ctx.message.text.length < 2) {
+    if (!ctx.message?.text || ctx.message?.text?.length < 2) {
       ctx.reply("Илтимос, фамилиянгизни тўлиқ ёзинг");
       return;
     }
@@ -177,6 +177,7 @@ const authScene = new WizardScene(
         first_name,
         last_name,
         contact: { phone_number },
+        telegram_chat_id,
       } = ctx.wizard.state.contactData;
 
       const full_name_list = [first_name, last_name].filter(Boolean);
@@ -186,7 +187,7 @@ const authScene = new WizardScene(
         Array.from(ADMINS).map((item_chat_id) => {
           return ctx.telegram.sendMessage(
             item_chat_id,
-            `Телеграм ботда <a href="tg://user?id=${contact.user_id}">${full_name}</a> рўйхатдан ўтди, рақами +${phone_number}`,
+            `Телеграм ботда <a href="tg://user?id=${telegram_chat_id}">${full_name}</a> рўйхатдан ўтди, рақами +${phone_number}`,
             {
               parse_mode: "HTML",
             }
@@ -206,7 +207,7 @@ const authScene = new WizardScene(
 );
 
 authScene.hears(BACK_BUTTON, (ctx) => {
-  ctx.session.isChecked = false
+  ctx.session.isChecked = false;
   ctx.scene.enter("MAIN_SCENE");
   return ctx.scene.leave("AUTH_SCENE");
 });
