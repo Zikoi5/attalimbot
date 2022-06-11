@@ -6,7 +6,16 @@ const ADMINS = require("../common/reviewers/admins.js");
 const checkIsReviewMessage = async (ctx, next) => {
   const isReplyMessage = ctx.message?.reply_to_message?.message_id;
   const isBotReplyMessage = ctx.message?.reply_to_message?.from?.is_bot;
-  const isAdminReply = ADMINS.includes(ctx.message?.from?.id);
+  const isAdminReply = ADMINS.includes(+ctx.message?.from?.id || 0);
+
+  // console.log(
+  //   "isReplyMessage",
+  //   isReplyMessage,
+  //   "isBotReplyMessage",
+  //   isBotReplyMessage,
+  //   "isAdminReply",
+  //   isAdminReply
+  // );
 
   if (isReplyMessage && isBotReplyMessage && isAdminReply) {
     const voiceToCheck = ctx.message.reply_to_message.voice;
@@ -20,15 +29,20 @@ const checkIsReviewMessage = async (ctx, next) => {
 
       if (isVoiceFound) {
         const reviewMessagesList = isVoiceFound.review_messages || [];
+        // console.log('reviewMessagesList', reviewMessagesList);
 
         if (ctx.message.voice) {
-          await ctx.telegram.sendAudio(
-            +isVoiceFound.telegram_chat_id,
-            ctx.message.voice.file_id,
-            {
-              caption: `Сиз жўнатган калима "${isVoiceFound.kalima_nomi}" га жавоб келди`,
-            }
-          );
+          await ctx.telegram
+            .sendAudio(
+              +isVoiceFound.telegram_chat_id,
+              ctx.message.voice.file_id,
+              {
+                caption: `Сиз жўнатган калима "${isVoiceFound.kalima_nomi}" га жавоб келди`,
+              }
+            )
+            .catch((err) => {
+              console.error(err);
+            });
 
           await voiceRequest.updateOne(
             { telegram_chat_id: isVoiceFound.telegram_chat_id },
