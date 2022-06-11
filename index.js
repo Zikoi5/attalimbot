@@ -17,6 +17,7 @@ const FURQON_SCENE = require("./scenes/furqon.js");
 
 /* Middlewares */
 const userChecker = require("./middlewares/user-checker.js");
+const reviewReplyChecker = require("./middlewares/review-reply-checker.js");
 
 const lessons = require("./lessons/top_5/index.js");
 
@@ -44,17 +45,17 @@ bot.catch((err) => {
   Sentry.captureException(err);
 });
 
-if (isDev) {
-  (async function () {
+(async function () {
+  if (isDev) {
     bot.use(Telegraf.log());
+  }
 
-    await mongodb();
+  await mongodb();
 
-    bot.launch().then(() => {
-      console.log(`Bot started. @${bot.botInfo.username}`);
-    });
-  })();
-}
+  bot.launch().then(() => {
+    console.log(`Bot started. @${bot.botInfo.username}`);
+  });
+})();
 
 const stage = new Stage([
   MAIN_SCENE,
@@ -68,6 +69,7 @@ const stage = new Stage([
 bot.use(session());
 bot.use(stage.middleware());
 bot.use(userChecker);
+bot.use(reviewReplyChecker);
 
 bot.start(async (ctx) => {
   await ctx.reply(

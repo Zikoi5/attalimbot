@@ -30,7 +30,7 @@ const tahlilScene = new WizardScene(
   },
 
   async (ctx) => {
-    if (ctx.message.text.length < 3) {
+    if (!ctx?.message?.text || ctx?.message?.text?.length < 3) {
       return ctx.reply("Илтимос, калима номини ёзинг!");
     }
 
@@ -86,7 +86,9 @@ const tahlilScene = new WizardScene(
             item_chat_id,
             ctx.message.voice.file_id,
             {
-              caption: `Овозтасма <a href="tg://user?id=${ctx.message.from.id}">${full_name}</a> дан келди`,
+              caption: `Калима номи: ${ctx.wizard.state.formData.kalima_nomi}.
+
+Овозтасма <a href="tg://user?id=${ctx.message.from.id}">${full_name}</a> дан келди`,
 
               parse_mode: "HTML",
             }

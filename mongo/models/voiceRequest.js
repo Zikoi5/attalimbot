@@ -28,6 +28,8 @@ const voiceRequest = new Schema(
       type: String,
       required: true,
     },
+
+    review_messages: []
   },
   {
     timestamps: true,
