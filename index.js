@@ -1,6 +1,7 @@
 require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
 
 const isDev = process.env.NODE_ENV === "development";
+const isProd = process.env.NODE_ENV === "production";
 
 const Sentry = require("@sentry/node");
 
@@ -34,7 +35,9 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 
 const deleteMessages = require("./utils/messages-remover.js");
 
-Sentry.init({ dsn: process.env.SENTRY_DNS, disabled: isDev });
+if (isProd) {
+  Sentry.init({ dsn: process.env.SENTRY_DNS });
+}
 
 bot.catch((err) => {
   if (isDev) {
@@ -42,7 +45,9 @@ bot.catch((err) => {
     return;
   }
 
-  Sentry.captureException(err);
+  if (isProd) {
+    Sentry.captureException(err);
+  }
 });
 
 (async function () {
