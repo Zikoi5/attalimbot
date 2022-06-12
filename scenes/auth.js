@@ -11,10 +11,11 @@ const {
 const { storeUser, updateUser } = require("../mongo/methods/user.js");
 const { generateSmsCode } = require("../utils/sms-code-generator.js");
 const { BACK_BUTTON } = require("../common/buttons/back-button.js");
+const isLatinOrCyrilicLetters = require("../utils/regex/isLatinOrCyrilicLetters.js");
 
 const MINUTES = 3;
 
-const ADMINS = require("../common/reviewers/admins.js");
+// const ADMINS = require("../common/reviewers/admins.js");
 
 // eslint-disable-next-line no-unused-vars
 async function tasdiqlash_function(ctx) {
@@ -89,9 +90,15 @@ const authScene = new WizardScene(
 
   // Фамилия
   (ctx) => {
+    const first_name = ctx.message?.text;
     // validation example
-    if (!ctx.message?.text || ctx.message?.text?.length < 2) {
+    if (!first_name || first_name?.length < 2) {
       ctx.reply("Илтимос, исмингизни тўлиқ ёзинг!");
+      return;
+    }
+
+    if (!isLatinOrCyrilicLetters(first_name)) {
+      ctx.reply("Хато, илтимос измингизни кирилл ёки лотин ҳарфларида ёзинг");
       return;
     }
 
@@ -103,8 +110,16 @@ const authScene = new WizardScene(
 
   // телефон рақам
   async (ctx) => {
-    if (!ctx.message?.text || ctx.message?.text?.length < 2) {
+    const last_name = ctx.message?.text;
+    if (!last_name || last_name?.length < 2) {
       ctx.reply("Илтимос, фамилиянгизни тўлиқ ёзинг");
+      return;
+    }
+
+    if (!isLatinOrCyrilicLetters(last_name)) {
+      ctx.reply(
+        "Хато, илтимос фамилиянгизни кирилл ёки лотин ҳарфларида ёзинг"
+      );
       return;
     }
 
@@ -173,27 +188,27 @@ const authScene = new WizardScene(
 
       await storeUser({ ctx, contact });
 
-      const {
-        first_name,
-        last_name,
-        contact: { phone_number },
-        telegram_chat_id,
-      } = ctx.wizard.state.contactData;
+      // const {
+      //   first_name,
+      //   last_name,
+      //   contact: { phone_number },
+      //   telegram_chat_id,
+      // } = ctx.wizard.state.contactData;
 
-      const full_name_list = [first_name, last_name].filter(Boolean);
-      const full_name = full_name_list.join(" ");
+      // const full_name_list = [first_name, last_name].filter(Boolean);
+      // const full_name = full_name_list.join(" ");
 
-      await Promise.all(
-        Array.from(ADMINS).map((item_chat_id) => {
-          return ctx.telegram.sendMessage(
-            item_chat_id,
-            `Телеграм ботда <a href="tg://user?id=${telegram_chat_id}">${full_name}</a> рўйхатдан ўтди, рақами +${phone_number}`,
-            {
-              parse_mode: "HTML",
-            }
-          );
-        })
-      ).catch(() => {});
+      // await Promise.all(
+      //   Array.from(ADMINS).map((item_chat_id) => {
+      //     return ctx.telegram.sendMessage(
+      //       item_chat_id,
+      //       `Телеграм ботда <a href="tg://user?id=${telegram_chat_id}">${full_name}</a> рўйхатдан ўтди, рақами +${phone_number}`,
+      //       {
+      //         parse_mode: "HTML",
+      //       }
+      //     );
+      //   })
+      // ).catch(() => {});
 
       ctx.scene.enter("MAIN_SCENE", ctx.wizard.state.contactData);
       // await ctx.reply("Телефон рақамингиз тасдиқланди");

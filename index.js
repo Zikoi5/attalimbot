@@ -34,7 +34,7 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 
 const deleteMessages = require("./utils/messages-remover.js");
 
-Sentry.init({ dsn: process.env.SENTRY_DNS });
+Sentry.init({ dsn: process.env.SENTRY_DNS, disabled: isDev });
 
 bot.catch((err) => {
   if (isDev) {
@@ -149,9 +149,9 @@ bot.hears(MAIN_BUTTONS.HARFLAR_BTN, (ctx) => ctx.scene.enter("HARFLAR_SCENE"));
 bot.hears(MAIN_BUTTONS.KALIMALAR_BTN, (ctx) =>
   ctx.scene.enter("KALIMALAR_SCENE")
 );
-bot.hears(MAIN_BUTTONS.TALAFFUZ_BTN, (ctx) =>
-  ctx.scene.enter("TALAFFUZ_SCENE")
-);
+// bot.hears(MAIN_BUTTONS.TALAFFUZ_BTN, (ctx) =>
+//   ctx.scene.enter("TALAFFUZ_SCENE")
+// );
 
 bot.hears(MAIN_BUTTONS.DARSLAR_BTN, darslarHandler);
 
@@ -182,21 +182,64 @@ function darslarHandler(ctx) {
   }
 }
 
-// let lmessages = [];
+// bot.on("message", (ctx) => {
+//   //Fixme
+//   if (
+//     !ctx.session.current &&
+//     ![MAIN_BUTTONS.DARSLAR_BTN, "Darslar"].includes(ctx.message.text)
+//   ) {
+//     return ctx.scene.enter("MAIN_SCENE");
+//   }
+// });
 
-bot.on("message", (ctx) => {
-  // const message_id = ctx.message.message_id;
-  // lmessages.push(message_id);
+// bot.hears("t", (ctx) => {
+//   ctx.reply(
+//     "TT",
+//     Markup.inlineKeyboard([
+//       Markup.button.url("❤️", "http://telegraf.js.org"),
+//       Markup.button.callback("➡️ Next", "next"),
+//     ])
+//   );
+// });
 
-  // console.log("message_id", message_id);
-  //Fixme
-  if (
-    !ctx.session.current &&
-    ![MAIN_BUTTONS.DARSLAR_BTN, "Darslar"].includes(ctx.message.text)
-  ) {
-    return ctx.scene.enter("MAIN_SCENE");
-  }
-});
+// eslint-disable-next-line no-unused-vars
+// function getPagination(current, maxpage) {
+//   const keys = [];
+//   if (current > 1) keys.push({ text: `«1`, callback_data: "1" });
+//   if (current > 2)
+//     keys.push({
+//       text: `‹${current - 1}`,
+//       callback_data: (current - 1).toString(),
+//     });
+//   keys.push({ text: `-${current}-`, callback_data: current.toString() });
+//   if (current < maxpage - 1)
+//     keys.push({
+//       text: `${current + 1}›`,
+//       callback_data: (current + 1).toString(),
+//     });
+//   if (current < maxpage)
+//     keys.push({ text: `${maxpage}»`, callback_data: maxpage.toString() });
+
+//   return {
+//     reply_markup: JSON.stringify({
+//       inline_keyboard: [keys],
+//     }),
+//   };
+// }
+
+// const bookPages = 100;
+
+// bot.on("callback_query", function (ctx) {
+//   // console.log("ctx", ctx);
+//   const callback_query = ctx.update?.callback_query;
+//   const msg = callback_query?.message;
+//   const editOptions = Object.assign(
+//     {},
+//     getPagination(1, bookPages),
+//     { chat_id: msg.chat.id, message_id: msg.message_id }
+//   );
+//   ctx.editMessageText("Page: updated", editOptions);
+// });
 
 bot.telegram.setWebhook(process.env.BOT_WEBHOOK_URL);
 

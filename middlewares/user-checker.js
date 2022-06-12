@@ -1,14 +1,14 @@
 const User = require("../mongo/models/user.js");
-const isDev = process.env.NODE_ENV === "development";
+// const isDev = process.env.NODE_ENV === "development";
 
 const getUserInfo = async (ctx, next) => {
   if (!ctx.session.isChecked) {
     ctx.session.isChecked = true;
     const user = await User.findOne({ telegram_chat_id: ctx.from.id });
 
-    if (isDev) {
-      console.log("user", user);
-    }
+    // if (isDev) {
+    //   console.log("user", user);
+    // }
 
     if (!user) {
       // ctx.session.language = user.language;

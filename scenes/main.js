@@ -13,7 +13,7 @@ const BUTTONS = {
   DARSLAR_BTN: "📜 Дарслар",
   HARFLAR_BTN: "🔤 Ҳарфлар",
   KALIMALAR_BTN: "📄 Калималар",
-  TALAFFUZ_BTN: "🔬 Калима топшириш",
+  // TALAFFUZ_BTN: "🔬 Калима топшириш",
   FURQON_BTN: "📔 Нур",
 };
 
