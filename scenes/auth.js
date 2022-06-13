@@ -14,6 +14,12 @@ const { BACK_BUTTON } = require("../common/buttons/back-button.js");
 const isLatinOrCyrilicLetters = require("../utils/regex/isLatinOrCyrilicLetters.js");
 
 const MINUTES = 3;
+const MARKUP_SEND_CONTACT_BUTTON = Markup.keyboard([
+  Markup.button.contactRequest("Телефон рақамини жўнатиш"),
+  BACK_BUTTON,
+])
+  .oneTime()
+  .resize();
 
 // const ADMINS = require("../common/reviewers/admins.js");
 
@@ -98,7 +104,7 @@ const authScene = new WizardScene(
     }
 
     if (!isLatinOrCyrilicLetters(first_name)) {
-      ctx.reply("Хато, илтимос измингизни кирилл ёки лотин ҳарфларида ёзинг");
+      ctx.reply("Хато. Илтимос исмингизни кирилл ёки лотин ҳарфларида ёзинг");
       return;
     }
 
@@ -118,21 +124,21 @@ const authScene = new WizardScene(
 
     if (!isLatinOrCyrilicLetters(last_name)) {
       ctx.reply(
-        "Хато, илтимос фамилиянгизни кирилл ёки лотин ҳарфларида ёзинг"
+        "Хато. Илтимос, фамилиянгизни кирилл ёки лотин ҳарфларида ёзинг"
       );
       return;
     }
 
     ctx.wizard.state.contactData.last_name = ctx.message.text;
 
-    ctx.reply(
+    await ctx.reply(
       '"Телефон рақамини жўнатиш" тугмасини босинг',
-      Markup.keyboard([
-        Markup.button.contactRequest("Телефон рақамини жўнатиш"),
-        BACK_BUTTON,
-      ])
-        .oneTime()
-        .resize()
+      MARKUP_SEND_CONTACT_BUTTON
+    );
+
+    ctx.telegram.sendPhoto(
+      ctx.message.from.id,
+      "AgACAgIAAxkDAAIQh2KnhhQB7VWmFFEiuEB0S-wBsyKpAAIGvzEbkilASa8giOAWmuldAQADAgADbQADJAQ"
     );
 
     return ctx.wizard.next();
@@ -145,6 +151,16 @@ const authScene = new WizardScene(
   async (ctx) => {
     try {
       const contact = ctx?.message?.contact || {};
+      const ctxUser = ctx?.message?.from || {};
+
+      if (!contact?.user_id || ctxUser.id !== contact.user_id) {
+        await ctx.reply(
+          "Илтимос, телеграмда ишлатаётган телефон рақамингизни жўнатинг",
+          MARKUP_SEND_CONTACT_BUTTON
+        );
+        return;
+      }
+
       ctx.wizard.state.contactData.contact = contact;
       // const now = new Date().getTime();
 

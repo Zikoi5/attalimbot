@@ -29,7 +29,9 @@ const voiceRequest = new Schema(
       required: true,
     },
 
-    review_messages: []
+    review_messages: {
+      type: Array,
+    }
   },
   {
     timestamps: true,

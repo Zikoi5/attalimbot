@@ -7,7 +7,8 @@ const User = new Schema(
     },
     phone_number: {
       type: String,
-      unique: true
+      unique: true,
+      sparse:true
     },
     telegram_chat_id: {
       type: String,
@@ -28,7 +29,9 @@ const User = new Schema(
       type: Boolean,
     },
 
-    working_hours: Array,
+    working_hours: {
+      type: Array
+    },
 
     cash: {
       type: Number,
