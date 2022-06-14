@@ -1,6 +1,16 @@
 const UserModel = require("../models/user");
 
+const DEFAULT_LIMIT = 10;
+
 module.exports = {
+  async fetchUsersList(params) {
+    const { limit = DEFAULT_LIMIT, skip = 0, ...props } = params || {};
+    const users = await UserModel.find({ ...props }, { __v: 0, updated_at: 0 })
+      .skip(+skip || 0)
+      .limit(+limit);
+    return users;
+  },
+
   async storeUser({ ctx, contact } = {}) {
     const ctxUser = ctx?.message?.from || {};
     const user = await UserModel.findOne(

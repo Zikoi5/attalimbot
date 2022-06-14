@@ -136,10 +136,11 @@ const authScene = new WizardScene(
       MARKUP_SEND_CONTACT_BUTTON
     );
 
-    ctx.telegram.sendPhoto(
-      ctx.message.from.id,
-      "AgACAgIAAxkDAAIQh2KnhhQB7VWmFFEiuEB0S-wBsyKpAAIGvzEbkilASa8giOAWmuldAQADAgADbQADJAQ"
-    );
+    // fixme
+    // ctx.telegram.sendPhoto(
+    //   ctx.message.from.id,
+    //   "AgACAgIAAxkDAAIQh2KnhhQB7VWmFFEiuEB0S-wBsyKpAAIGvzEbkilASa8giOAWmuldAQADAgADbQADJAQ"
+    // );
 
     return ctx.wizard.next();
   },

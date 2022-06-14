@@ -22,7 +22,8 @@
     "form-data": "^4.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.3.4",
-    "telegraf": "^4.7.0"
+    "telegraf": "^4.7.0",
+    "telegraf-pagination": "^1.1.0"
   },
   "devDependencies": {
     "eslint": "^8.15.0",
