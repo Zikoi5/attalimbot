@@ -13,6 +13,8 @@ const { generateSmsCode } = require("../utils/sms-code-generator.js");
 const { BACK_BUTTON } = require("../common/buttons/back-button.js");
 const isLatinOrCyrilicLetters = require("../utils/regex/isLatinOrCyrilicLetters.js");
 
+const User = require("../mongo/models/user.js");
+
 const MINUTES = 3;
 const MARKUP_SEND_CONTACT_BUTTON = Markup.keyboard([
   Markup.button.contactRequest("Телефон рақамини жўнатиш"),
@@ -85,7 +87,17 @@ const authScene = new WizardScene(
   "AUTH_SCENE",
 
   // Исм
-  (ctx) => {
+  async (ctx) => {
+    const user = await User.findOne({
+      telegram_chat_id: ctx.message?.from?.id,
+    });
+
+    if (user) {
+      ctx.scene.enter("MAIN_SCENE", {});
+      await ctx.reply("Сиз зотан рўйхатдан ўтгансиз");
+      return ctx.scene.leave("AUTH_SCENE");
+    }
+
     ctx.reply("Исмингизни киритинг", {
       reply_markup: { remove_keyboard: true },
     });

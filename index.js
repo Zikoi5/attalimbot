@@ -152,6 +152,7 @@ Array.from({ length: 5 }).forEach((_, index) => {
 
 bot.command("harflar", (ctx) => ctx.scene.enter("HARFLAR_SCENE"));
 bot.command("kalimalar", (ctx) => ctx.scene.enter("KALIMALAR_SCENE"));
+bot.command("nur", (ctx) => ctx.scene.enter("FURQON_SCENE"));
 bot.command("darslar", darslarHandler);
 
 bot.hears(MAIN_BUTTONS.HARFLAR_BTN, (ctx) => ctx.scene.enter("HARFLAR_SCENE"));
@@ -191,15 +192,15 @@ function darslarHandler(ctx) {
   }
 }
 
-// bot.on("message", (ctx) => {
-//   //Fixme
-//   if (
-//     !ctx.session.current &&
-//     ![MAIN_BUTTONS.DARSLAR_BTN, "Darslar"].includes(ctx.message.text)
-//   ) {
-//     return ctx.scene.enter("MAIN_SCENE");
-//   }
-// });
+bot.on("message", (ctx) => {
+  //Fixme
+  if (
+    !ctx.session.current &&
+    ![MAIN_BUTTONS.DARSLAR_BTN, "Darslar"].includes(ctx.message.text)
+  ) {
+    return ctx.scene.enter("MAIN_SCENE");
+  }
+});
 
 // bot.hears("t", async (ctx) => {
 //   const data = await fetchUsersList({ limit: 100 });
