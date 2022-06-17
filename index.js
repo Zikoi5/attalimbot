@@ -55,9 +55,9 @@ bot.catch((err) => {
 });
 
 (async function () {
-  // if (isDev) {
-  //   bot.use(Telegraf.log());
-  // }
+  if (isDev) {
+    bot.use(Telegraf.log());
+  }
 
   await mongodb();
 

@@ -1,5 +1,4 @@
 const {
-  Markup,
   Scenes: { WizardScene },
 } = require("telegraf");
 
@@ -16,12 +15,29 @@ const isLatinOrCyrilicLetters = require("../utils/regex/isLatinOrCyrilicLetters.
 const User = require("../mongo/models/user.js");
 
 const MINUTES = 3;
-const MARKUP_SEND_CONTACT_BUTTON = Markup.keyboard([
-  Markup.button.contactRequest("Телефон рақамини жўнатиш"),
-  BACK_BUTTON,
-])
-  .oneTime()
-  .resize();
+// const MARKUP_SEND_CONTACT_BUTTON = Markup.keyboard([
+//   Markup.button.contactRequest("Телефон рақамини жўнатиш"),
+//   BACK_BUTTON,
+// ])
+//   .oneTime()
+//   .resize();
+const MARKUP_SEND_CONTACT_BUTTON = () => {
+  return {
+    reply_markup: {
+      keyboard: [
+        [
+          {
+            text: "📲 Телефон рақамини жўнатиш",
+            request_contact: true,
+          },
+        ],
+        [BACK_BUTTON],
+      ],
+      one_time_keyboard: true,
+      resize_keyboard: true,
+    },
+  };
+};
 
 // const ADMINS = require("../common/reviewers/admins.js");
 
@@ -92,7 +108,7 @@ const authScene = new WizardScene(
       telegram_chat_id: ctx.message?.from?.id,
     });
 
-    if (user) {
+    if (user && user.phone_number) {
       ctx.scene.enter("MAIN_SCENE", {});
       await ctx.reply("Сиз зотан рўйхатдан ўтгансиз");
       return ctx.scene.leave("AUTH_SCENE");
@@ -145,7 +161,7 @@ const authScene = new WizardScene(
 
     await ctx.reply(
       '"Телефон рақамини жўнатиш" тугмасини босинг',
-      MARKUP_SEND_CONTACT_BUTTON
+      MARKUP_SEND_CONTACT_BUTTON()
     );
 
     // fixme
@@ -169,7 +185,7 @@ const authScene = new WizardScene(
       if (!contact?.user_id || ctxUser.id !== contact.user_id) {
         await ctx.reply(
           "Илтимос, телеграмда ишлатаётган телефон рақамингизни жўнатинг",
-          MARKUP_SEND_CONTACT_BUTTON
+          MARKUP_SEND_CONTACT_BUTTON()
         );
         return;
       }
@@ -244,6 +260,10 @@ const authScene = new WizardScene(
       return ctx.scene.leave("AUTH_SCENE");
     } catch (error) {
       console.log("Wizard contact error", error);
+      console.log(
+        "On error contactData",
+        JSON.stringify(ctx.wizard?.state?.contactData, null, 2)
+      );
       ctx.reply("Маълумотлар билан ишлашда хато юз берди");
       ctx.scene.leave("AUTH_SCENE");
     }
