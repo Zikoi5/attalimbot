@@ -17,7 +17,7 @@ const TALAFFUZ_SCENE = require("./scenes/tahlilul-tilavat.js");
 const FURQON_SCENE = require("./scenes/furqon.js");
 
 /* Middlewares */
-const userChecker = require("./middlewares/user-checker.js");
+// const userChecker = require("./middlewares/user-checker.js");
 const reviewReplyChecker = require("./middlewares/review-reply-checker.js");
 
 const lessons = require("./lessons/top_5/index.js");
@@ -77,7 +77,7 @@ const stage = new Stage([
 
 bot.use(session());
 bot.use(stage.middleware());
-bot.use(userChecker);
+// bot.use(userChecker);
 bot.use(reviewReplyChecker);
 
 bot.start(async (ctx) => {
