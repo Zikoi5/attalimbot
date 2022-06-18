@@ -22,9 +22,10 @@ module.exports = {
 
     const { id, username } = ctxUser;
     const { phone_number, first_name, last_name } = contact;
-    const currTime = new Date().getTime();
 
     if (user) {
+      const currTime = new Date().getTime();
+
       res = await UserModel.updateOne(
         { telegram_chat_id: id },
         {
@@ -35,7 +36,7 @@ module.exports = {
       res = await UserModel.create({
         telegram_chat_id: id,
         username,
-        phone_number: phone_number,
+        phone_number,
         first_name,
         last_name,
       });

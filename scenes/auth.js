@@ -231,14 +231,16 @@ const authScene = new WizardScene(
       //   },
       // });
 
-      await storeUser({ ctx, contact });
+      const {
+        first_name,
+        last_name,
+        contact: { phone_number },
+      } = ctx.wizard.state.contactData;
 
-      // const {
-      //   first_name,
-      //   last_name,
-      //   contact: { phone_number },
-      //   telegram_chat_id,
-      // } = ctx.wizard.state.contactData;
+      await storeUser({
+        ctx,
+        contact: { first_name, last_name, phone_number },
+      });
 
       // const full_name_list = [first_name, last_name].filter(Boolean);
       // const full_name = full_name_list.join(" ");

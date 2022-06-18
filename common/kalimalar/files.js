@@ -19,16 +19,6 @@ const kalimalar = {
         }),
         ctx,
       });
-
-      // await ctx.telegram.copyMessage(replyUserId, FROM_USER_ID, 335, {
-      //   protect_content: true,
-      // });
-      // await ctx.telegram.copyMessage(replyUserId, FROM_USER_ID, 336, {
-      //   protect_content: true,
-      // });
-      // await ctx.telegram.copyMessage(replyUserId, FROM_USER_ID, 337, {
-      //   protect_content: true,
-      // });
     },
   },
   SHAHODAT_KALIMASI: {
@@ -37,35 +27,13 @@ const kalimalar = {
       const replyUserId = ctx?.update?.message?.from?.id;
 
       sendArgsToChain({
-        replyList: [
-          {
-            reply_user_id: replyUserId,
-            from: FROM_USER_ID,
-            message_id: 377,
-          },
-          {
-            reply_user_id: replyUserId,
-            from: FROM_USER_ID,
-            message_id: 378,
-          },
-          {
-            reply_user_id: replyUserId,
-            from: FROM_USER_ID,
-            message_id: 379,
-          },
-        ],
+        replyList: replyPropsToList({
+          replyUserId,
+          FROM_USER_ID,
+          messageIdList: [377, 378, 379],
+        }),
         ctx,
       });
-
-      // await ctx.telegram.copyMessage(replyUserId, FROM_USER_ID, 377, {
-      //   protect_content: true,
-      // });
-      // await ctx.telegram.copyMessage(replyUserId, FROM_USER_ID, 378, {
-      //   protect_content: true,
-      // });
-      // await ctx.telegram.copyMessage(replyUserId, FROM_USER_ID, 379, {
-      //   protect_content: true,
-      // });
     },
   },
   TAVHID_KALIMASI: {
