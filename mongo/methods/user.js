@@ -19,8 +19,8 @@ module.exports = {
     );
 
     let res = null;
-
-    const { id, username } = ctxUser;
+``
+    const { id } = ctxUser;
     const { phone_number, first_name, last_name } = contact;
 
     if (user) {
@@ -35,7 +35,6 @@ module.exports = {
     } else {
       res = await UserModel.create({
         telegram_chat_id: id,
-        username,
         phone_number,
         first_name,
         last_name,
