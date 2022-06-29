@@ -9,8 +9,6 @@ const UserModel = require("../mongo/models/user");
 const { BACK_BUTTON } = require("../common/buttons/back-button.js");
 const SEND_BUTTON = "🚀 Жўнатиш";
 
-const FROM_USER_ID = 2082926;
-
 const elonScene = new WizardScene(
   "ELON_SCENE",
   async (ctx) => {
@@ -59,6 +57,8 @@ const elonScene = new WizardScene(
     let successfullySendCount = 0;
     let unSuccessfullySendCount = 0;
 
+    const FROM_USER_ID = ctx.message.chat.id
+
     Promise.all(
       usersListToIdList.map((item) => {
         return new Promise((resolve) => {
@@ -71,7 +71,8 @@ const elonScene = new WizardScene(
                 .then(() => {
                   successfullySendCount += 1;
                 })
-                .catch(() => {
+                .catch((err) => {
+                  console.error('Promise all [copyMessage]', err);
                   unSuccessfullySendCount += 1;
                 })
             );

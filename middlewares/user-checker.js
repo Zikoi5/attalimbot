@@ -1,5 +1,6 @@
 const User = require("../mongo/models/user.js");
 // const isDev = process.env.NODE_ENV === "development";
+const CHECK_AUTH = Boolean(process.env.CHECK_AUTH);
 
 const getUserInfo = async (ctx, next) => {
   if (!ctx.session.isChecked) {
@@ -10,7 +11,7 @@ const getUserInfo = async (ctx, next) => {
     //   console.log("user", user);
     // }
 
-    if (!user) {
+    if (!user && CHECK_AUTH) {
       // ctx.session.language = user.language;
       // ctx.i18n.locale(user.language);
       ctx.reply("Ботда рўйхатдан ўтинг");
@@ -26,7 +27,7 @@ const getUserInfo = async (ctx, next) => {
       }
     );
 
-    ctx.session.is_admin = !!user.is_admin
+    ctx.session.is_admin = !!user.is_admin;
   }
 
   return next();
