@@ -15,7 +15,8 @@ const elonScene = new WizardScene(
   "ELON_SCENE",
   async (ctx) => {
     ctx.replyWithMarkdown(
-      `Эълон матнини киритинг, медиа файллар ҳам қўшиш мумкин.`
+      `Эълон матнини киритинг, медиа файллар ҳам қўшиш мумкин.`,
+      Markup.keyboard([BACK_BUTTON], { columns: 1 }).resize()
     );
 
     return ctx.wizard.next();
@@ -43,6 +44,10 @@ const elonScene = new WizardScene(
 
   async (ctx) => {
     // collect all users
+    const t = await ctx.replyWithMarkdown(`Илтимос кутинг....`, {
+      reply_markup: { remove_keyboard: true },
+    });
+
     const count = await getNumOfDocs("users");
     const announceMessage = ctx.wizard.state.announce_message;
 
@@ -53,8 +58,6 @@ const elonScene = new WizardScene(
 
     let successfullySendCount = 0;
     let unSuccessfullySendCount = 0;
-
-    const t = await ctx.replyWithMarkdown(`Илтимос кутинг....`);
 
     Promise.all(
       usersListToIdList.map((item) => {
@@ -85,7 +88,7 @@ const elonScene = new WizardScene(
           `${
             usersListToIdList.length
           } тадан ${successfullySendCount} тасига (%${succesPercent.toFixed(
-            2
+            0
           )}) га юборилди.`
         );
 
