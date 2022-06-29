@@ -4,12 +4,12 @@ const User = new Schema(
   {
     username: {
       type: String,
-      sparse:true
+      sparse: true,
     },
     phone_number: {
       type: String,
       // unique: true,
-      sparse:true
+      sparse: true,
     },
     telegram_chat_id: {
       type: String,
@@ -31,12 +31,17 @@ const User = new Schema(
     },
 
     working_hours: {
-      type: Array
+      type: Array,
     },
 
     cash: {
       type: Number,
-      default: 0
+      default: 0,
+    },
+
+    is_admin: {
+      type: Boolean,
+      default: false,
     },
   },
   {

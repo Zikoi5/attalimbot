@@ -3,6 +3,8 @@ const {
   Scenes: { BaseScene },
 } = require("telegraf");
 
+const { NO_ACCESS_BUTTON } = require("../common/buttons/no-way-button.js");
+
 // const { commandsList } = require("../help.js");
 
 // console.log("commandsList", commandsList);
@@ -17,17 +19,34 @@ const BUTTONS = {
   FURQON_BTN: "📔 Нур",
 };
 
+const ANNOUNCE_BUTTON = "📢 Эълон жўнатиш";
+
 const BUTTONS_LIST = Object.values(BUTTONS);
 
 mainScene.enter(async (ctx) => {
+  let combineButtonsList = BUTTONS_LIST;
+  const is_admin = ctx.session.is_admin;
+
+  if (is_admin) {
+    combineButtonsList = [...combineButtonsList, ANNOUNCE_BUTTON];
+  }
+
   const { message_id } = await ctx.reply(
     "Асосий бўлим",
-    Markup.keyboard(BUTTONS_LIST, {
+    Markup.keyboard(combineButtonsList, {
       columns: 2,
     }).resize()
   );
 
   ctx.scene.state.welcome_msg_id = message_id;
+});
+
+mainScene.hears(ANNOUNCE_BUTTON, (ctx) => {
+  if (!ctx.session.is_admin) {
+    return ctx.reply(NO_ACCESS_BUTTON);
+  }
+  ctx.scene.enter("ELON_SCENE");
+  ctx.scene.leave("MAIN_SCENE");
 });
 
 mainScene.hears("s", (ctx) => {

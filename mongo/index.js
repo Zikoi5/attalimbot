@@ -1,5 +1,5 @@
 // const express = require("express");
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 // const authRouter = require("@/authRouter");
 // const bodyParser = require("body-parser");
 // const cors = require("cors");
@@ -14,14 +14,14 @@ const mongoose = require("mongoose")
 
 const start = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_CONNECT_URL)
-    console.log(`Mongodb started`)
+    await mongoose.connect(process.env.MONGO_CONNECT_URL);
+    console.log(`Mongodb started`);
     // app.listen(PORT, () => {
     //   console.log(`Mongodb listening port ${PORT}`);
     // });
   } catch (err) {
-    console.error(err)
+    console.error(err);
   }
-}
+};
 
-module.exports = start
+module.exports = start;

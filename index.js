@@ -13,8 +13,9 @@ const AUTH_SCENE = require("./scenes/auth.js");
 const { MAIN_SCENE, MAIN_BUTTONS } = require("./scenes/main.js");
 const HARFLAR_SCENE = require("./scenes/harflar.js");
 const KALIMALAR_SCENE = require("./scenes/kalimalar.js");
-const TALAFFUZ_SCENE = require("./scenes/tahlilul-tilavat.js");
+// const TALAFFUZ_SCENE = require("./scenes/tahlilul-tilavat.js");
 const FURQON_SCENE = require("./scenes/furqon.js");
+const ELON_SCENE = require("./scenes/elon.js");
 
 /* Middlewares */
 const userChecker = require("./middlewares/user-checker.js");
@@ -71,8 +72,9 @@ const stage = new Stage([
   AUTH_SCENE,
   HARFLAR_SCENE,
   KALIMALAR_SCENE,
-  TALAFFUZ_SCENE,
+  // TALAFFUZ_SCENE,
   FURQON_SCENE,
+  ELON_SCENE
 ]);
 
 bot.use(session());

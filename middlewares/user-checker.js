@@ -25,6 +25,8 @@ const getUserInfo = async (ctx, next) => {
         $set: { last_login_at: currTime },
       }
     );
+
+    ctx.session.is_admin = !!user.is_admin
   }
 
   return next();
