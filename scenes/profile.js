@@ -11,7 +11,7 @@ const profileScene = new BaseScene("PROFILE_SCENE");
 profileScene.enter(async (ctx) => {
   const user = await User.findOne({ telegram_chat_id: ctx.message.from.id });
 
-  console.log("user", user);
+  // console.log("user", user);
 
   if (!user) {
     return ctx.reply(
