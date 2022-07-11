@@ -22,7 +22,7 @@ const suralar = {
     },
   },
   FATIHA_SURA: {
-    title: "Фотиҳа сураси",
+    title: "💬 Фотиҳа сураси",
     async handler(ctx) {
       const replyUserId = ctx?.update?.message?.from?.id;
 
@@ -486,7 +486,7 @@ const suralar = {
   },
 
   QURAYSH_SURA: {
-    title: "Қурайш сураси",
+    title: "💬 Қурайш сураси",
     async handler(ctx) {
       const replyUserId = ctx?.update?.message?.from?.id;
 
@@ -502,7 +502,7 @@ const suralar = {
   },
 
   MAAUUN_SURA: {
-    title: "Мааъуун сураси",
+    title: "💬 Мааъуун сураси",
     async handler(ctx) {
       const replyUserId = ctx?.update?.message?.from?.id;
 
@@ -517,24 +517,8 @@ const suralar = {
     },
   },
 
-  KAAFIRUUN_SURA: {
-    title: "Каафируун сураси",
-    async handler(ctx) {
-      const replyUserId = ctx?.update?.message?.from?.id;
-
-      sendArgsToChain({
-        replyList: replyPropsToList({
-          replyUserId,
-          FROM_USER_ID,
-          messageIdList: [35816, 35820],
-        }),
-        ctx,
-      });
-    },
-  },
-
   KAVSAR_SURA: {
-    title: "Кавсар сураси",
+    title: "💬 Кавсар сураси",
     async handler(ctx) {
       const replyUserId = ctx?.update?.message?.from?.id;
 
@@ -549,8 +533,24 @@ const suralar = {
     },
   },
 
+  KAAFIRUUN_SURA: {
+    title: "💬 Каафируун сураси",
+    async handler(ctx) {
+      const replyUserId = ctx?.update?.message?.from?.id;
+
+      sendArgsToChain({
+        replyList: replyPropsToList({
+          replyUserId,
+          FROM_USER_ID,
+          messageIdList: [35816, 35820],
+        }),
+        ctx,
+      });
+    },
+  },
+
   NASR_SURA: {
-    title: "Наср сураси",
+    title: "💬 Наср сураси",
     async handler(ctx) {
       const replyUserId = ctx?.update?.message?.from?.id;
 
@@ -566,7 +566,7 @@ const suralar = {
   },
 
   MASAD_SURA: {
-    title: "Масад сураси",
+    title: "💬 Масад сураси",
     async handler(ctx) {
       const replyUserId = ctx?.update?.message?.from?.id;
 
@@ -582,7 +582,7 @@ const suralar = {
   },
 
   IXLOS_SURA: {
-    title: "Ихлос сураси",
+    title: "💬 Ихлос сураси",
     async handler(ctx) {
       const replyUserId = ctx?.update?.message?.from?.id;
 
@@ -598,7 +598,7 @@ const suralar = {
   },
 
   FALAQ_SURA: {
-    title: "Фалақ сураси",
+    title: "💬 Фалақ сураси",
     async handler(ctx) {
       const replyUserId = ctx?.update?.message?.from?.id;
 
@@ -614,7 +614,7 @@ const suralar = {
   },
 
   NAAS_SURA: {
-    title: "Наас сураси",
+    title: "💬 Наас сураси",
     async handler(ctx) {
       const replyUserId = ctx?.update?.message?.from?.id;
 
