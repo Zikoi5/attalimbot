@@ -16,12 +16,19 @@ const KALIMALAR_SCENE = require("./scenes/kalimalar.js");
 // const TALAFFUZ_SCENE = require("./scenes/tahlilul-tilavat.js");
 const FURQON_SCENE = require("./scenes/furqon.js");
 const ELON_SCENE = require("./scenes/elon.js");
+const PROFILE_SCENE = require("./scenes/profile.js");
 
 /* Middlewares */
 const userChecker = require("./middlewares/user-checker.js");
 const reviewReplyChecker = require("./middlewares/review-reply-checker.js");
 
 const lessons = require("./lessons/top_5/index.js");
+
+const dayjs = require("dayjs");
+require("dayjs/locale/uz");
+dayjs.locale("uz");
+
+global.$dayjs = dayjs;
 
 const {
   Telegraf,
@@ -74,7 +81,8 @@ const stage = new Stage([
   KALIMALAR_SCENE,
   // TALAFFUZ_SCENE,
   FURQON_SCENE,
-  ELON_SCENE
+  ELON_SCENE,
+  PROFILE_SCENE,
 ]);
 
 bot.use(session());
@@ -168,6 +176,7 @@ bot.hears(MAIN_BUTTONS.KALIMALAR_BTN, (ctx) =>
 bot.hears(MAIN_BUTTONS.DARSLAR_BTN, darslarHandler);
 
 bot.hears(MAIN_BUTTONS.FURQON_BTN, (ctx) => ctx.scene.enter("FURQON_SCENE"));
+bot.hears(MAIN_BUTTONS.PROFILE_BTN, (ctx) => ctx.scene.enter("PROFILE_SCENE"));
 
 bot.hears(BACK_BUTTON, (ctx) => ctx.scene.enter("MAIN_SCENE"));
 

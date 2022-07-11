@@ -18,7 +18,7 @@ const BUTTONS = {
   // TALAFFUZ_BTN: "🔬 Калима топшириш",
   FURQON_BTN: "📔 Нур",
   // VIKTORINA_BTN: "🎓 Викторина",
-  // PROFILE_BTN: "⚙️ Маълумотларим",
+  PROFILE_BTN: "🆔 Маълумотларим",
 };
 
 const ANNOUNCE_BUTTON = "📢 Эълон жўнатиш";
@@ -51,13 +51,13 @@ mainScene.hears(ANNOUNCE_BUTTON, (ctx) => {
   ctx.scene.leave("MAIN_SCENE");
 });
 
-mainScene.hears("s", (ctx) => {
-  return ctx.replyWithHTML(
-    `<pre>${
-      (ctx.session && JSON.stringify(ctx.session, null, 2)) ||
-      "Session is empty"
-    }</pre>`
-  );
+mainScene.hears(BUTTONS.PROFILE_BTN, (ctx) => {
+  // if (!ctx.session.is_admin) {
+  //   return ctx.reply(NO_ACCESS_BUTTON);
+  // }
+
+  ctx.scene.enter("PROFILE_SCENE");
+  ctx.scene.leave("MAIN_SCENE");
 });
 
 mainScene.leave((ctx) => {
