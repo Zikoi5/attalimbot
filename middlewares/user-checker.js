@@ -3,6 +3,10 @@ const User = require("../mongo/models/user.js");
 const CHECK_AUTH = Boolean(process.env.CHECK_AUTH);
 
 const getUserInfo = async (ctx, next) => {
+  if(!ctx.session || !ctx?.from?.id){
+    return next()
+  }
+
   if (!ctx.session.isChecked) {
     ctx.session.isChecked = true;
     const user = await User.findOne({ telegram_chat_id: ctx.from.id });

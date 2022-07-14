@@ -24,11 +24,7 @@ const reviewReplyChecker = require("./middlewares/review-reply-checker.js");
 
 const lessons = require("./lessons/top_5/index.js");
 
-const dayjs = require("dayjs");
-require("dayjs/locale/uz");
-dayjs.locale("uz");
-
-global.$dayjs = dayjs;
+require("./plugins/dayjs.js");
 
 const {
   Telegraf,
@@ -37,15 +33,9 @@ const {
   Scenes: { Stage },
 } = require("telegraf");
 
-// const { Pagination } = require("telegraf-pagination");
-
-// const { fetchUsersList } = require("./mongo/methods/user.js");
-
 const mongodb = require("./mongo/index.js");
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
-
-const deleteMessages = require("./utils/messages-remover.js");
 
 if (isProd) {
   Sentry.init({ dsn: process.env.SENTRY_DNS });
@@ -63,9 +53,9 @@ bot.catch((err) => {
 });
 
 (async function () {
-  if (isDev) {
-    bot.use(Telegraf.log());
-  }
+  // if (isDev) {
+  //   bot.use(Telegraf.log());
+  // }
 
   await mongodb();
 
@@ -85,7 +75,35 @@ const stage = new Stage([
   PROFILE_SCENE,
 ]);
 
-bot.use(session());
+bot.use(
+  // poll bug fix
+  session({
+    getSessionKey: (ctx) => {
+      if (!ctx) {
+        return `:`;
+      }
+
+      // console.log("ctx", ctx);
+
+      const { pollAnswer, from } = ctx;
+
+      if (!pollAnswer && !from) {
+        // console.log('no way');
+        return ctx;
+      }
+
+      // for public quizzes
+      if (pollAnswer?.user.id) {
+        const { id } = pollAnswer.user;
+        return `${id}:${id}`;
+      }
+
+      // fallback
+      // ⚠️ Be careful, these values may not be available.
+      return `${from.id}:${from.id}`;
+    },
+  })
+);
 bot.use(stage.middleware());
 bot.use(userChecker);
 bot.use(reviewReplyChecker);
@@ -104,39 +122,6 @@ bot.start(async (ctx) => {
 });
 
 bot.help((ctx) => ctx.reply(helpTextLines));
-
-bot.on("document", async (ctx) => {
-  // console.log("contact handler ctx", doc)
-  if (isDev) {
-    const doc = JSON.stringify(ctx.update.message.document, null, 2);
-    await ctx.reply(`Received document: ${doc}`);
-  }
-});
-
-bot.command("test", (ctx) => {
-  if (isDev) {
-    return ctx.reply(
-      "Special buttons keyboard",
-      Markup.keyboard([
-        Markup.button.contactRequest("Send contact"),
-        Markup.button.locationRequest("Send location"),
-      ]).resize()
-    );
-  }
-});
-
-bot.command("delete", async (ctx) => {
-  if (isDev) {
-    // const replyUserId = ctx?.update?.message?.chat?.id;
-    // await ctx.reply(
-    //   `ctx.update.chat.id \n\`${JSON.stringify(ctx.message, null, 2)}\``
-    // );
-
-    deleteMessages({ count: 100, ctx });
-    // await ctx?.deleteMessage?.(replyUserId);
-    // ctx.messages.deleteHistory()
-  }
-});
 
 function replyLesson({ lesson, number }) {
   try {
@@ -182,6 +167,42 @@ bot.hears(BACK_BUTTON, (ctx) => ctx.scene.enter("MAIN_SCENE"));
 
 bot.command("auth", (ctx) => ctx.scene.enter("AUTH_SCENE"));
 
+const POLL_MIN_TIMEOUT = 20;
+
+bot.hears("t", async (ctx) => {
+  const options = ["Test variant 1", "Test variant 2"];
+
+  await ctx.telegram
+    .sendPoll(ctx.message.from.id, "Test savol", options, {
+      protect_content: true,
+      is_anonymous: false,
+      open_period: POLL_MIN_TIMEOUT,
+      correct_option_id: 1,
+      explanation: "Varint 2 to'ri =)",
+      // type: "quiz",
+    })
+    .then((res) => {
+      // console.log("res", res);
+      ctx.session.sendPollRes = res;
+      // const t = setTimeout(() => {
+      //   ctx.telegram.deleteMessage(ctx.message.from.id, res.message_id).catch(() => {});
+      //   clearTimeout(t);
+      // }, (2 + POLL_MIN_TIMEOUT) * 1000);
+    });
+});
+
+bot.on("poll_answer", (ctx) => {
+  // console.log('poll_answer', ctx);
+  const { session } = ctx;
+
+  if (session.sendPollRes) {
+    return ctx.telegram
+      .stopPoll(session.sendPollRes.chat.id, session.sendPollRes.message_id)
+      .catch(() => {});
+  }
+  return ctx;
+});
+
 function darslarHandler(ctx) {
   try {
     return ctx.replyWithHTML(
@@ -209,83 +230,10 @@ bot.on("message", (ctx) => {
     !ctx.session.current &&
     ![MAIN_BUTTONS.DARSLAR_BTN, "Darslar"].includes(ctx.message.text)
   ) {
-    return ctx.scene.enter("MAIN_SCENE");
+    ctx.scene.enter("MAIN_SCENE");
+    return ctx;
   }
 });
-
-// bot.hears("t", async (ctx) => {
-//   const data = await fetchUsersList({ limit: 100 });
-//   const pagination = new Pagination({
-//     data,
-//     header: (currentPage, pageSize, total) =>
-//       `${currentPage}-page of total ${total}`, // optional. Default value: 👇
-//     // `Items ${(currentPage - 1) * pageSize + 1 }-${currentPage * pageSize <= total ? currentPage * pageSize : total} of ${total}`;
-//     format: (item, index) =>
-//       `${index + 1}. ${[item.first_name, item.last_name]
-//         .filter(Boolean)
-//         .join(" ")}`, // optional. Default value: 👇
-//     // `${index + 1}. ${item}`;
-//     pageSize: 16, // optional. Default value: 10
-//     rowSize: 4, // optional. Default value: 5 (maximum 8)
-//     onSelect: (item) => {
-//       const { phone_number, first_name, last_name, username } = item;
-//       ctx.reply(`${phone_number}\n${first_name || ''} ${last_name || ''} ${username || ''}`);
-//     }, // optional. Default value: empty function
-//     messages: {
-//       // optional
-//       firstPage: "First page", // optional. Default value: "❗️ That's the first page"
-//       lastPage: "Last page", // optional. Default value: "❗️ That's the last page"
-//       prev: "◀️", // optional. Default value: "⬅️"
-//       next: "▶️", // optional. Default value: "➡️"
-//       delete: "", // optional. Default value: "❌"
-//     },
-//   });
-
-//   pagination.handleActions(bot); // pass bot or scene instance as a parameter
-
-//   let text = await pagination.text(); // get pagination text
-//   let keyboard = await pagination.keyboard(); // get pagination keyboard
-//   ctx.replyWithHTML(text, keyboard);
-// });
-
-// eslint-disable-next-line no-unused-vars
-// function getPagination(current, maxpage) {
-//   const keys = [];
-//   if (current > 1) keys.push({ text: `«1`, callback_data: "1" });
-//   if (current > 2)
-//     keys.push({
-//       text: `‹${current - 1}`,
-//       callback_data: (current - 1).toString(),
-//     });
-//   keys.push({ text: `-${current}-`, callback_data: current.toString() });
-//   if (current < maxpage - 1)
-//     keys.push({
-//       text: `${current + 1}›`,
-//       callback_data: (current + 1).toString(),
-//     });
-//   if (current < maxpage)
-//     keys.push({ text: `${maxpage}»`, callback_data: maxpage.toString() });
-
-//   return {
-//     reply_markup: JSON.stringify({
-//       inline_keyboard: [keys],
-//     }),
-//   };
-// }
-
-// const bookPages = 100;
-
-// bot.on("callback_query", function (ctx) {
-//   // console.log("ctx", ctx);
-//   const callback_query = ctx.update?.callback_query;
-//   const msg = callback_query?.message;
-//   const editOptions = Object.assign(
-//     {},
-//     getPagination(1, bookPages),
-//     { chat_id: msg.chat.id, message_id: msg.message_id }
-//   );
-//   ctx.editMessageText("Page: updated", editOptions);
-// });
 
 bot.telegram.setWebhook(process.env.BOT_WEBHOOK_URL);
 
