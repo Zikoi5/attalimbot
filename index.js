@@ -17,6 +17,8 @@ const KALIMALAR_SCENE = require("./scenes/kalimalar.js");
 const FURQON_SCENE = require("./scenes/furqon.js");
 const ELON_SCENE = require("./scenes/elon.js");
 const PROFILE_SCENE = require("./scenes/profile.js");
+const POLL_SCENE = require("./scenes/poll/index.js");
+const POLL_ADD_SCENE = require("./scenes/poll/add.js");
 
 /* Middlewares */
 const userChecker = require("./middlewares/user-checker.js");
@@ -53,9 +55,9 @@ bot.catch((err) => {
 });
 
 (async function () {
-  // if (isDev) {
-  //   bot.use(Telegraf.log());
-  // }
+  if (isDev) {
+    bot.use(Telegraf.log());
+  }
 
   await mongodb();
 
@@ -73,6 +75,8 @@ const stage = new Stage([
   FURQON_SCENE,
   ELON_SCENE,
   PROFILE_SCENE,
+  POLL_SCENE,
+  POLL_ADD_SCENE
 ]);
 
 bot.use(
@@ -117,7 +121,7 @@ bot.start(async (ctx) => {
     }`
   );
 
-  ctx.reply(helpTextLines);
+  await ctx.reply(helpTextLines);
   ctx.scene.enter("MAIN_SCENE");
 });
 
@@ -162,6 +166,7 @@ bot.hears(MAIN_BUTTONS.DARSLAR_BTN, darslarHandler);
 
 bot.hears(MAIN_BUTTONS.FURQON_BTN, (ctx) => ctx.scene.enter("FURQON_SCENE"));
 bot.hears(MAIN_BUTTONS.PROFILE_BTN, (ctx) => ctx.scene.enter("PROFILE_SCENE"));
+bot.hears(MAIN_BUTTONS.VIKTORINA_BTN, (ctx) => ctx.scene.enter("POLL_SCENE"));
 
 bot.hears(BACK_BUTTON, (ctx) => ctx.scene.enter("MAIN_SCENE"));
 
