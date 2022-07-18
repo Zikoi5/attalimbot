@@ -3,22 +3,32 @@ const {
   Scenes: { BaseScene },
 } = require("telegraf");
 
-// const Poll = require("../mongo/models/poll.js");
-
 const { BACK_BUTTON } = require("../../common/buttons/back-button.js");
 const { removeCurrMessages } = require("../../utils/request-chain-methods.js");
 
 const pollScene = new BaseScene("POLL_SCENE");
 
+// eslint-disable-next-line no-unused-vars
 const [QOSHISH_BTN, ROYXAT_BTN, TESTDAN_OTISH_BTN] = [
   "➕ Қўшиш",
   "📦 Рўйхат",
   "🎓 Тестдан ўтиш",
 ];
 
-const SCENE_ADMIN_MARKUP_BUTTONS = [QOSHISH_BTN, ROYXAT_BTN, TESTDAN_OTISH_BTN];
+const SCENE_ADMIN_MARKUP_BUTTONS = [
+  QOSHISH_BTN,
+  // ROYXAT_BTN,
+  TESTDAN_OTISH_BTN,
+];
 
 pollScene.enter(async (ctx) => {
+  const is_admin = ctx.session.is_admin;
+
+  if (!is_admin) {
+    ctx.scene.enter("POLL:BEGIN_SCENE");
+    return ctx.scene.leave("POLL_SCENE");
+  }
+
   const res = await ctx.reply(
     "Бўлимни танланг",
     Markup.keyboard([...SCENE_ADMIN_MARKUP_BUTTONS, BACK_BUTTON], {
@@ -30,7 +40,6 @@ pollScene.enter(async (ctx) => {
 
   return res;
 });
-
 
 pollScene.hears(BACK_BUTTON, async (ctx) => {
   const { message_id } = await ctx.reply("-", {
@@ -44,10 +53,15 @@ pollScene.hears(BACK_BUTTON, async (ctx) => {
     .catch(() => {});
 
   ctx.scene.leave("POLL_SCENE");
+  ctx.scene.enter("MAIN_SCENE");
 });
 
 pollScene.hears(QOSHISH_BTN, (ctx) => {
   ctx.scene.enter("POLL:ADD_SCENE");
+});
+
+pollScene.hears(TESTDAN_OTISH_BTN, (ctx) => {
+  ctx.scene.enter("POLL:BEGIN_SCENE");
 });
 
 pollScene.leave(async (ctx) => {

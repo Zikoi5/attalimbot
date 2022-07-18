@@ -15,9 +15,7 @@ async function removeCurrMessages(ctx) {
   ) {
     for (const message_id of ctx.scene.state.messages_to_delete) {
       if (message_id) {
-        await ctx.deleteMessage(message_id).catch((err) => {
-          throw err;
-        });
+        await ctx.deleteMessage(message_id).catch(() => {});
       }
     }
 

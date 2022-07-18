@@ -61,13 +61,13 @@ async function tasdiqlash_function(ctx) {
 
   // await storeSmsCode({ id: ctxUser.id, code: smsCode });
 
-  const form = {
-    mobile_phone: +contact.phone_number,
-    message: `Sms tasdiqlash kodi - ${smsCode}`,
-    from: 4546,
-  };
+  // const form = {
+  //   mobile_phone: +contact.phone_number,
+  //   message: `Sms tasdiqlash kodi - ${smsCode}`,
+  //   from: 4546,
+  // };
 
-  console.log("form", form);
+  // console.log("form", form);
 
   const currDate = new Date().getTime();
   const expireDate = new Date(currDate + MINUTES * 60000).getTime();

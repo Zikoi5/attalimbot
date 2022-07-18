@@ -19,6 +19,7 @@ const ELON_SCENE = require("./scenes/elon.js");
 const PROFILE_SCENE = require("./scenes/profile.js");
 const POLL_SCENE = require("./scenes/poll/index.js");
 const POLL_ADD_SCENE = require("./scenes/poll/add.js");
+const POLL_BEGIN_SCENE = require("./scenes/poll/begin.js");
 
 /* Middlewares */
 const userChecker = require("./middlewares/user-checker.js");
@@ -75,8 +76,10 @@ const stage = new Stage([
   FURQON_SCENE,
   ELON_SCENE,
   PROFILE_SCENE,
+
   POLL_SCENE,
-  POLL_ADD_SCENE
+  POLL_ADD_SCENE,
+  POLL_BEGIN_SCENE,
 ]);
 
 bot.use(
@@ -171,42 +174,6 @@ bot.hears(MAIN_BUTTONS.VIKTORINA_BTN, (ctx) => ctx.scene.enter("POLL_SCENE"));
 bot.hears(BACK_BUTTON, (ctx) => ctx.scene.enter("MAIN_SCENE"));
 
 bot.command("auth", (ctx) => ctx.scene.enter("AUTH_SCENE"));
-
-const POLL_MIN_TIMEOUT = 20;
-
-bot.hears("t", async (ctx) => {
-  const options = ["Test variant 1", "Test variant 2"];
-
-  await ctx.telegram
-    .sendPoll(ctx.message.from.id, "Test savol", options, {
-      protect_content: true,
-      is_anonymous: false,
-      open_period: POLL_MIN_TIMEOUT,
-      correct_option_id: 1,
-      explanation: "Varint 2 to'ri =)",
-      // type: "quiz",
-    })
-    .then((res) => {
-      // console.log("res", res);
-      ctx.session.sendPollRes = res;
-      // const t = setTimeout(() => {
-      //   ctx.telegram.deleteMessage(ctx.message.from.id, res.message_id).catch(() => {});
-      //   clearTimeout(t);
-      // }, (2 + POLL_MIN_TIMEOUT) * 1000);
-    });
-});
-
-bot.on("poll_answer", (ctx) => {
-  // console.log('poll_answer', ctx);
-  const { session } = ctx;
-
-  if (session.sendPollRes) {
-    return ctx.telegram
-      .stopPoll(session.sendPollRes.chat.id, session.sendPollRes.message_id)
-      .catch(() => {});
-  }
-  return ctx;
-});
 
 function darslarHandler(ctx) {
   try {
