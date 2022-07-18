@@ -10,6 +10,7 @@ scp -i $SSH_KEY -r ./middlewares $USER@$HOST:$PROJECT_PATH
 scp -i $SSH_KEY -r ./mongo $USER@$HOST:$PROJECT_PATH
 scp -i $SSH_KEY -r ./scenes $USER@$HOST:$PROJECT_PATH
 scp -i $SSH_KEY -r ./utils $USER@$HOST:$PROJECT_PATH
+scp -i $SSH_KEY -r ./plugins $USER@$HOST:$PROJECT_PATH
 scp -i $SSH_KEY -r ./.eslintrc.js $USER@$HOST:$PROJECT_PATH
 scp -i $SSH_KEY -r ./.gitignore $USER@$HOST:$PROJECT_PATH
 scp -i $SSH_KEY -r ./help.js $USER@$HOST:$PROJECT_PATH
