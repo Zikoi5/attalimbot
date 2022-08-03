@@ -180,14 +180,10 @@ function darslarHandler(ctx) {
     return ctx.replyWithHTML(
       "<b>Дарслардан бирини танланг</b>",
       Markup.inlineKeyboard([
-        [
-          Markup.button.callback("📖 Дарс 1", "dars_1"),
-          Markup.button.callback("📖 Дарс 2", "dars_2"),
-        ],
-        [
-          Markup.button.callback("📖 Дарс 3", "dars_3"),
-          Markup.button.callback("📖 Дарс 4", "dars_4"),
-        ],
+        [Markup.button.callback("📖 Дарс 1", "dars_1")],
+        [Markup.button.callback("📖 Дарс 2", "dars_2")],
+        [Markup.button.callback("📖 Дарс 3", "dars_3")],
+        [Markup.button.callback("📖 Дарс 4", "dars_4")],
         [Markup.button.callback("📖 Дарс 5", "dars_5")],
       ])
     );

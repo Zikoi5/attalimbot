@@ -24,6 +24,7 @@ profileScene.enter(async (ctx) => {
   const userCreatedAt =
     (user.createdAt && $dayjs(user.createdAt).format("DD MMM YYYY HH:mm:ss")) ||
     "";
+
   const userLastLogin =
     (user.last_login_at &&
       $dayjs(user.last_login_at).format("DD MMM YYYY HH:mm:ss")) ||
@@ -31,7 +32,10 @@ profileScene.enter(async (ctx) => {
 
   ctx.replyWithMarkdown(
     `Телефон рақами:\n${user.phone_number}\n\nФ.И.О:\n${full_name}\n\nРўйхатдан ўтилган сана:\n${userCreatedAt}\n\nБотдан охирги фойдаланилган вақт:\n${userLastLogin}\n\n`,
-    Markup.keyboard([BACK_BUTTON]).resize()
+    {
+      protect_content: true,
+      ...Markup.keyboard([BACK_BUTTON]).resize(),
+    }
   );
 });
 
