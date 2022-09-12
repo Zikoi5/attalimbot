@@ -149,7 +149,7 @@ pollBeginScene.on("poll_answer", async (ctx) => {
   // console.log("poll_answer session", session);
   // console.log("pollProps", pollProps);
 
-  if (pollProps) {
+  if (pollProps?.chat?.id) {
     await ctx.telegram
       .stopPoll(pollProps.chat.id, pollProps.message_id)
       .catch(() => {});
