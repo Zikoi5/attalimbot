@@ -298,6 +298,9 @@ const kalimalar = {
 };
 
 const kalimalarKeys = Object.keys(kalimalar);
+kalimalarKeys.forEach((key, index) => {
+  kalimalar[key].title = `${index + 1}. ${kalimalar[key].title}`;
+});
 const kalimalarValues = Object.values(kalimalar);
 const kalimalarTitles = kalimalarValues.map((item) => item.title);
 

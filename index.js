@@ -3,7 +3,7 @@ require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
 const isDev = process.env.NODE_ENV === "development";
 const isProd = process.env.NODE_ENV === "production";
 
-const Sentry = require("@sentry/node");
+const Sentry = require("./plugins/sentry.js");
 
 const { helpTextLines } = require("./help.js");
 const { BACK_BUTTON } = require("./common/buttons/back-button.js");
@@ -13,6 +13,7 @@ const AUTH_SCENE = require("./scenes/auth.js");
 const { MAIN_SCENE, MAIN_BUTTONS } = require("./scenes/main.js");
 const HARFLAR_SCENE = require("./scenes/harflar.js");
 const KALIMALAR_SCENE = require("./scenes/kalimalar.js");
+const DUOLAR_SCENE = require("./scenes/duolar.js");
 // const TALAFFUZ_SCENE = require("./scenes/tahlilul-tilavat.js");
 const FURQON_SCENE = require("./scenes/furqon.js");
 const ELON_SCENE = require("./scenes/elon.js");
@@ -72,6 +73,7 @@ const stage = new Stage([
   AUTH_SCENE,
   HARFLAR_SCENE,
   KALIMALAR_SCENE,
+  DUOLAR_SCENE,
   // TALAFFUZ_SCENE,
   FURQON_SCENE,
   ELON_SCENE,
@@ -161,6 +163,8 @@ bot.hears(MAIN_BUTTONS.HARFLAR_BTN, (ctx) => ctx.scene.enter("HARFLAR_SCENE"));
 bot.hears(MAIN_BUTTONS.KALIMALAR_BTN, (ctx) =>
   ctx.scene.enter("KALIMALAR_SCENE")
 );
+
+bot.hears(MAIN_BUTTONS.DUOLAR_BTN, (ctx) => ctx.scene.enter("DUOLAR_SCENE"));
 // bot.hears(MAIN_BUTTONS.TALAFFUZ_BTN, (ctx) =>
 //   ctx.scene.enter("TALAFFUZ_SCENE")
 // );
