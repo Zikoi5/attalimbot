@@ -10,7 +10,7 @@ const { BACK_BUTTON } = require("./common/buttons/back-button.js");
 
 /* Scenes */
 const AUTH_SCENE = require("./scenes/auth.js");
-const { MAIN_SCENE, MAIN_BUTTONS } = require("./scenes/main.js");
+const { MAIN_SCENE, MAIN_BUTTONS, ANNOUNCE_BTN } = require("./scenes/main.js");
 const HARFLAR_SCENE = require("./scenes/harflar.js");
 const KALIMALAR_SCENE = require("./scenes/kalimalar.js");
 const DUOLAR_SCENE = require("./scenes/duolar.js");
@@ -127,7 +127,7 @@ bot.start(async (ctx) => {
   );
 
   await ctx.reply(helpTextLines);
-  ctx.scene.enter("MAIN_SCENE");
+  await ctx.scene.enter("MAIN_SCENE");
 });
 
 bot.help((ctx) => ctx.reply(helpTextLines));
@@ -174,6 +174,7 @@ bot.hears(MAIN_BUTTONS.DARSLAR_BTN, darslarHandler);
 bot.hears(MAIN_BUTTONS.FURQON_BTN, (ctx) => ctx.scene.enter("FURQON_SCENE"));
 bot.hears(MAIN_BUTTONS.PROFILE_BTN, (ctx) => ctx.scene.enter("PROFILE_SCENE"));
 bot.hears(MAIN_BUTTONS.VIKTORINA_BTN, (ctx) => ctx.scene.enter("POLL_SCENE"));
+bot.hears(ANNOUNCE_BTN, (ctx) => ctx.scene.enter("ELON_SCENE"));
 
 bot.hears(BACK_BUTTON, (ctx) => ctx.scene.enter("MAIN_SCENE"));
 

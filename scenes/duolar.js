@@ -19,7 +19,7 @@ const { removeCurrMessages } = require("../utils/request-chain-methods.js");
 duolarScene.enter(async (ctx) => {
   const res = await ctx.reply(
     TANLANG,
-    Markup.keyboard([...duolarTitles, BACK_BUTTON], {
+    Markup.keyboard([BACK_BUTTON, ...duolarTitles, BACK_BUTTON], {
       columns: 1,
     }).resize()
   );

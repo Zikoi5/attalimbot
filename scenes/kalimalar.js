@@ -19,7 +19,7 @@ const { removeCurrMessages } = require("../utils/request-chain-methods.js");
 kalimalarScene.enter(async (ctx) => {
   const res = await ctx.reply(
     KALIMANI_TANLANG,
-    Markup.keyboard([...kalimalarTitles, BACK_BUTTON], {
+    Markup.keyboard([BACK_BUTTON, ...kalimalarTitles, BACK_BUTTON], {
       columns: 1,
     }).resize()
   );

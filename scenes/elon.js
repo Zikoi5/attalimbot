@@ -7,12 +7,19 @@ const getNumOfDocs = require("../mongo/methods/collectionCountFetcher.js");
 const UserModel = require("../mongo/models/user");
 
 const { BACK_BUTTON } = require("../common/buttons/back-button.js");
+const { NO_ACCESS_BUTTON } = require("../common/buttons/no-way-button.js");
+const { removeCurrMessages } = require("../utils/request-chain-methods.js");
 const SEND_BUTTON = "🚀 Жўнатиш";
 
 const elonScene = new WizardScene(
   "ELON_SCENE",
   async (ctx) => {
-    ctx.replyWithMarkdown(
+    if (!ctx.session.is_admin) {
+      await ctx.reply(NO_ACCESS_BUTTON);
+      return ctx.scene.enter("MAIN_SCENE");
+    }
+
+    await ctx.replyWithMarkdown(
       `Эълон матнини киритинг, медиа файллар ҳам қўшиш мумкин.`,
       Markup.keyboard([BACK_BUTTON], { columns: 1 }).resize()
     );
@@ -113,7 +120,11 @@ const elonScene = new WizardScene(
 
 elonScene.hears(BACK_BUTTON, (ctx) => {
   ctx.scene.enter("MAIN_SCENE");
-  return ctx.scene.leave("ELON_SCENE");
+});
+
+elonScene.leave(async (ctx) => {
+  // console.log("messages_to_delete", ctx.scene.state.messages_to_delete);
+  await removeCurrMessages(ctx);
 });
 
 module.exports = elonScene;
