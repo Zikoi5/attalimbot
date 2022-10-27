@@ -44,15 +44,7 @@ harflarScene.leave(async (ctx) => {
 });
 
 harflarScene.hears(BACK_BUTTON, async (ctx) => {
-  const { message_id } = await ctx.reply("-", {
-    reply_markup: { remove_keyboard: true },
-  });
-
   await ctx.deleteMessage(ctx.message.message_id).catch(() => {});
-  await ctx.deleteMessage(message_id).catch(() => {});
-  await ctx
-    .deleteMessage(ctx.scene.state.enter_text_message_id)
-    .catch(() => {});
   ctx.scene.leave("HARFLAR_SCENE");
 });
 

@@ -5,6 +5,7 @@ const {
 
 const User = require("../mongo/models/user.js");
 const { BACK_BUTTON } = require("../common/buttons/back-button.js");
+const { removeCurrMessages } = require("../utils/request-chain-methods.js");
 
 const profileScene = new BaseScene("PROFILE_SCENE");
 
@@ -40,18 +41,14 @@ profileScene.enter(async (ctx) => {
 });
 
 profileScene.hears(BACK_BUTTON, async (ctx) => {
-  const { message_id } = await ctx.reply("-", {
-    reply_markup: { remove_keyboard: true },
-  });
-
   await ctx.deleteMessage(ctx.message.message_id).catch(() => {});
-  await ctx.deleteMessage(message_id).catch(() => {});
-  await ctx
-    .deleteMessage(ctx.scene.state.enter_text_message_id)
-    .catch(() => {});
-
-  ctx.scene.enter("MAIN_SCENE");
   ctx.scene.leave("PROFILE_SCENE");
+});
+
+profileScene.leave(async (ctx) => {
+  // console.log("messages_to_delete", ctx.scene.state.messages_to_delete);
+  await removeCurrMessages(ctx);
+  ctx.scene.enter("MAIN_SCENE");
 });
 
 module.exports = profileScene;
