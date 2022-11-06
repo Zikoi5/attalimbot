@@ -100,6 +100,11 @@ async function showTest(ctx) {
     })
     .then(async (res) => {
       const { message_id, chat, poll } = res;
+      if(!ctx?.scene?.state?.poll_list?.[poll.id]) {
+        await ctx.stopPoll(message_id).catch(() => {});
+        return
+      }
+
       ctx.scene.state.poll_list[poll.id] = {
         chat,
         poll,

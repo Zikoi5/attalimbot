@@ -80,4 +80,5 @@ module.exports = {
   sendArgsToChain,
   removeCurrMessages,
   replyPropsToList,
+  chainPromises,
 };
