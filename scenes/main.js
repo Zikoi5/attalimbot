@@ -17,7 +17,7 @@ const HARFLAR_BTN = "🔤 Ҳарфлар";
 const KALIMALAR_BTN = "📄 Калималар";
 const DUOLAR_BTN = "📄 Дуолар";
 const FURQON_BTN = "📔 Нур";
-const VIKTORINA_BTN = "🌟 Викторина";
+// const VIKTORINA_BTN = "🌟 Викторина";
 const PROFILE_BTN = "🆔 Маълумотларим";
 
 const BUTTONS = {
@@ -27,7 +27,7 @@ const BUTTONS = {
   DUOLAR_BTN,
   // TALAFFUZ_BTN: "🔬 Калима топшириш",
   FURQON_BTN,
-  VIKTORINA_BTN,
+  // VIKTORINA_BTN,
   PROFILE_BTN,
 };
 

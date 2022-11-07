@@ -63,7 +63,7 @@ bot.catch((err) => {
 
   await mongodb();
 
-  bot.launch().then(() => {
+  bot.launch({ dropPendingUpdates: true }).then(() => {
     console.log(`Bot started. @${bot.botInfo.username}`);
   });
 })();
@@ -173,7 +173,7 @@ bot.hears(MAIN_BUTTONS.DARSLAR_BTN, darslarHandler);
 
 bot.hears(MAIN_BUTTONS.FURQON_BTN, (ctx) => ctx.scene.enter("FURQON_SCENE"));
 bot.hears(MAIN_BUTTONS.PROFILE_BTN, (ctx) => ctx.scene.enter("PROFILE_SCENE"));
-bot.hears(MAIN_BUTTONS.VIKTORINA_BTN, (ctx) => ctx.scene.enter("POLL_SCENE"));
+// bot.hears(MAIN_BUTTONS.VIKTORINA_BTN, (ctx) => ctx.scene.enter("POLL_SCENE"));
 bot.hears(ANNOUNCE_BTN, (ctx) => ctx.scene.enter("ELON_SCENE"));
 
 bot.hears(BACK_BUTTON, (ctx) => ctx.scene.enter("MAIN_SCENE"));
@@ -208,7 +208,7 @@ bot.on("message", (ctx) => {
   }
 });
 
-bot.telegram.setWebhook(process.env.BOT_WEBHOOK_URL);
+// bot.telegram.setWebhook(process.env.BOT_WEBHOOK_URL);
 
 exports.handler = async function (event, context, callback) {
   try {

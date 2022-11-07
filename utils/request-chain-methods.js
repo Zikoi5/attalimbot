@@ -1,4 +1,4 @@
-const Sentry = require("../plugins/sentry.js");
+// const Sentry = require("../plugins/sentry.js");
 
 const REMOVE_OLD_MESSAGES_BEFORE_LEAVE =
   process.env.REMOVE_OLD_MESSAGES_BEFORE_LEAVE;
@@ -52,8 +52,8 @@ async function sendArgsToChain({ ctx, replyList }) {
             ];
           }
         })
-        .catch((err) => {
-          Sentry.captureException(err);
+        .catch(() => {
+          // Sentry.captureException(err);
         });
     };
   });
