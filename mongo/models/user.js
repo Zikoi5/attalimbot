@@ -4,12 +4,10 @@ const User = new Schema(
   {
     username: {
       type: String,
-      sparse: true,
     },
     phone_number: {
       type: String,
       // unique: true,
-      sparse: true,
     },
     telegram_chat_id: {
       type: String,
