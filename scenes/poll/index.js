@@ -25,7 +25,8 @@ pollScene.enter(async (ctx) => {
   const is_admin = ctx.session.is_admin;
 
   if (!is_admin) {
-    ctx.scene.enter("POLL:BEGIN_SCENE");
+    ctx.scene.enter("POLL:GROUP_SCENE");
+    // ctx.scene.enter("POLL:BEGIN_SCENE");
     return ctx.scene.leave("POLL_SCENE");
   }
 

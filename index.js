@@ -21,6 +21,7 @@ const PROFILE_SCENE = require("./scenes/profile.js");
 const POLL_SCENE = require("./scenes/poll/index.js");
 const POLL_ADD_SCENE = require("./scenes/poll/add.js");
 const POLL_BEGIN_SCENE = require("./scenes/poll/begin.js");
+const POLL_GROUP_SCENE = require("./scenes/poll/group.js");
 
 /* Middlewares */
 const userChecker = require("./middlewares/user-checker.js");
@@ -58,7 +59,7 @@ bot.catch((err) => {
 
 (async function () {
   if (isDev) {
-    bot.use(Telegraf.log());
+    // bot.use(Telegraf.log());
   }
 
   await mongodb();
@@ -82,6 +83,7 @@ const stage = new Stage([
   POLL_SCENE,
   POLL_ADD_SCENE,
   POLL_BEGIN_SCENE,
+  POLL_GROUP_SCENE,
 ]);
 
 bot.use(
@@ -173,7 +175,7 @@ bot.hears(MAIN_BUTTONS.DARSLAR_BTN, darslarHandler);
 
 bot.hears(MAIN_BUTTONS.FURQON_BTN, (ctx) => ctx.scene.enter("FURQON_SCENE"));
 bot.hears(MAIN_BUTTONS.PROFILE_BTN, (ctx) => ctx.scene.enter("PROFILE_SCENE"));
-// bot.hears(MAIN_BUTTONS.VIKTORINA_BTN, (ctx) => ctx.scene.enter("POLL_SCENE"));
+bot.hears(MAIN_BUTTONS.VIKTORINA_BTN, (ctx) => ctx.scene.enter("POLL_SCENE"));
 bot.hears(ANNOUNCE_BTN, (ctx) => ctx.scene.enter("ELON_SCENE"));
 
 bot.hears(BACK_BUTTON, (ctx) => ctx.scene.enter("MAIN_SCENE"));
