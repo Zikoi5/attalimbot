@@ -54,7 +54,8 @@ pollScene.hears(QOSHISH_BTN, (ctx) => {
 });
 
 pollScene.hears(TESTDAN_OTISH_BTN, (ctx) => {
-  ctx.scene.enter("POLL:BEGIN_SCENE");
+  ctx.scene.enter("POLL:GROUP_SCENE");
+  return ctx.scene.leave("POLL_SCENE");
 });
 
 pollScene.leave(async (ctx) => {

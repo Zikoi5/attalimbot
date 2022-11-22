@@ -41,7 +41,6 @@ pollGroupScene.enter(async (ctx) => {
 });
 
 pollGroupScene.action(/^poll_group_(\w+)$/, async (ctx) => {
-  // await ctx.answerCbQuery();
   const handlerId = ctx.match[1];
   const { title, polls_list } = ctx.scene.state.poll_group_list[handlerId];
   const telegram_chat_id = ctx.chat.id;
@@ -49,6 +48,7 @@ pollGroupScene.action(/^poll_group_(\w+)$/, async (ctx) => {
     { telegram_chat_id },
     { _id: 1 }
   );
+
   const { poll_answers_list = [], answers } = await fetchUserPollResults({
     user_id,
   });
@@ -81,7 +81,10 @@ pollGroupScene.action(/^poll_group_(\w+)$/, async (ctx) => {
   }
 
   if (answers && poll_answers_list.length >= answers.total) {
-    const succesPercent = Math.round((answers.right / answers.total) * 100);
+    const succesPercent =
+      (answers &&
+        Math.round(((+answers.right || 0) / (+answers.total || 0)) * 100)) ||
+      0;
     const testState = (succesPercent >= 70 && "✅") || "❌";
     const text = `'${title}' тести натижалари - ${answers.right}/${answers.total} ${succesPercent}% ${testState}`;
     await ctx.replyWithMarkdown(text, {

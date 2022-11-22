@@ -47,13 +47,17 @@ if (isProd) {
 }
 
 bot.catch((err) => {
-  if (isDev) {
-    console.error("Catched error", err);
-    return;
-  }
+  try {
+    if (isDev) {
+      console.error("Catched error", err);
+      return;
+    }
 
-  if (isProd) {
-    Sentry.captureException(err);
+    if (isProd) {
+      Sentry.captureException(err);
+    }
+  } catch (err) {
+    //
   }
 });
 
