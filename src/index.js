@@ -27,15 +27,12 @@ const POLL_GROUP_SCENE = require("./scenes/poll/group.js");
 const userChecker = require("./middlewares/user-checker.js");
 const reviewReplyChecker = require("./middlewares/review-reply-checker.js");
 
-const lessons = require("./lessons/top_5/index.js");
-
 require("./plugins/dayjs.js");
 
 const {
   Telegraf,
-  Markup,
   session,
-  Scenes: { Stage },
+  Scenes: { Stage }
 } = require("telegraf");
 
 const mongodb = require("./mongo/index.js");
@@ -87,7 +84,7 @@ const stage = new Stage([
   POLL_SCENE,
   POLL_ADD_SCENE,
   POLL_BEGIN_SCENE,
-  POLL_GROUP_SCENE,
+  POLL_GROUP_SCENE
 ]);
 
 bot.use(
@@ -116,7 +113,7 @@ bot.use(
       // fallback
       // ⚠️ Be careful, these values may not be available.
       return `${from.id}:${from.id}`;
-    },
+    }
   })
 );
 bot.use(stage.middleware());
@@ -138,32 +135,9 @@ bot.start(async (ctx) => {
 
 bot.help((ctx) => ctx.reply(helpTextLines));
 
-function replyLesson({ lesson, number }) {
-  try {
-    bot.action(lesson, async (ctx) => {
-      const { message_id } = await ctx.reply("Юкланмоқда...");
-      const replyUserId = ctx?.update?.callback_query?.from?.id;
-
-      const lessonFileByNumber = lessons[`dars_${number}`];
-      await ctx.telegram.sendDocument(replyUserId, lessonFileByNumber);
-
-      await ctx.answerCbQuery();
-      ctx.deleteMessage(message_id).catch(() => {});
-    });
-  } catch (err) {
-    console.error(err);
-  }
-}
-
-Array.from({ length: 5 }).forEach((_, index) => {
-  const number = index + 1;
-  replyLesson({ lesson: `dars_${number}`, number });
-});
-
 bot.command("harflar", (ctx) => ctx.scene.enter("HARFLAR_SCENE"));
 bot.command("kalimalar", (ctx) => ctx.scene.enter("KALIMALAR_SCENE"));
 bot.command("nur", (ctx) => ctx.scene.enter("FURQON_SCENE"));
-bot.command("darslar", darslarHandler);
 
 bot.hears(MAIN_BUTTONS.HARFLAR_BTN, (ctx) => ctx.scene.enter("HARFLAR_SCENE"));
 bot.hears(MAIN_BUTTONS.KALIMALAR_BTN, (ctx) =>
@@ -175,8 +149,6 @@ bot.hears(MAIN_BUTTONS.DUOLAR_BTN, (ctx) => ctx.scene.enter("DUOLAR_SCENE"));
 //   ctx.scene.enter("TALAFFUZ_SCENE")
 // );
 
-bot.hears(MAIN_BUTTONS.DARSLAR_BTN, darslarHandler);
-
 bot.hears(MAIN_BUTTONS.FURQON_BTN, (ctx) => ctx.scene.enter("FURQON_SCENE"));
 bot.hears(MAIN_BUTTONS.PROFILE_BTN, (ctx) => ctx.scene.enter("PROFILE_SCENE"));
 bot.hears(MAIN_BUTTONS.VIKTORINA_BTN, (ctx) => ctx.scene.enter("POLL_SCENE"));
@@ -185,23 +157,6 @@ bot.hears(ANNOUNCE_BTN, (ctx) => ctx.scene.enter("ELON_SCENE"));
 bot.hears(BACK_BUTTON, (ctx) => ctx.scene.enter("MAIN_SCENE"));
 
 bot.command("auth", (ctx) => ctx.scene.enter("AUTH_SCENE"));
-
-function darslarHandler(ctx) {
-  try {
-    return ctx.replyWithHTML(
-      "<b>Дарслардан бирини танланг</b>",
-      Markup.inlineKeyboard([
-        [Markup.button.callback("📖 Дарс 1", "dars_1")],
-        [Markup.button.callback("📖 Дарс 2", "dars_2")],
-        [Markup.button.callback("📖 Дарс 3", "dars_3")],
-        [Markup.button.callback("📖 Дарс 4", "dars_4")],
-        [Markup.button.callback("📖 Дарс 5", "dars_5")],
-      ])
-    );
-  } catch (err) {
-    console.error(err);
-  }
-}
 
 bot.on("message", (ctx) => {
   //Fixme
@@ -221,7 +176,7 @@ exports.handler = async function (event, context, callback) {
     bot.handleUpdate(event);
     return callback(null, {
       statusCode: 200,
-      body: "",
+      body: ""
     });
   } catch (err) {
     Sentry.captureException(err);

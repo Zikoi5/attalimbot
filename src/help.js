@@ -1,8 +1,6 @@
 const text = `
 /start - Ботни ишга тушириш
-/darslar - Дарслар
 /harflar - Ҳарфлар
-/kalimalar - Калималар
 /help - Ёрдам
 `;
 
