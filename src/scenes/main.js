@@ -1,6 +1,6 @@
 const {
   Markup,
-  Scenes: { BaseScene },
+  Scenes: { BaseScene }
 } = require("telegraf");
 
 // const { NO_ACCESS_BUTTON } = require("../common/buttons/no-way-button.js");
@@ -12,23 +12,21 @@ const {
 const mainScene = new BaseScene("MAIN_SCENE");
 
 const ANNOUNCE_BTN = "📢 Эълон жўнатиш";
-const DARSLAR_BTN = "📜 Дарслар";
 const HARFLAR_BTN = "🔤 Ҳарфлар";
-const KALIMALAR_BTN = "📄 Калималар";
+const KALIMALAR_BTN = "📄 Ёрдам";
 const DUOLAR_BTN = "📄 Дуолар";
 const FURQON_BTN = "📔 Нур";
 const VIKTORINA_BTN = "🌟 Тест";
 const PROFILE_BTN = "🆔 Маълумотларим";
 
 const BUTTONS = {
-  DARSLAR_BTN,
   HARFLAR_BTN,
   KALIMALAR_BTN,
   DUOLAR_BTN,
   // TALAFFUZ_BTN: "🔬 Калима топшириш",
   FURQON_BTN,
   VIKTORINA_BTN,
-  PROFILE_BTN,
+  PROFILE_BTN
 };
 
 const BUTTONS_LIST = Object.values(BUTTONS);
@@ -44,7 +42,7 @@ mainScene.enter(async (ctx) => {
   const { message_id } = await ctx.reply(
     "Асосий бўлим",
     Markup.keyboard(combineButtonsList, {
-      columns: 2,
+      columns: 2
     }).resize()
   );
 
@@ -75,5 +73,5 @@ mainScene.leave((ctx) => {
 module.exports = {
   MAIN_SCENE: mainScene,
   MAIN_BUTTONS: BUTTONS,
-  ANNOUNCE_BTN,
+  ANNOUNCE_BTN
 };

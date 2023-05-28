@@ -14,11 +14,10 @@ const mongoose = require("mongoose");
 
 const start = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_CONNECT_URL);
-    console.log(`Mongodb started`);
-    // app.listen(PORT, () => {
-    //   console.log(`Mongodb listening port ${PORT}`);
-    // });
+    return mongoose.connect(process.env.MONGO_CONNECT_URL).then((res) => {
+      console.log(`Mongodb started`);
+      return res;
+    });
   } catch (err) {
     console.error(err);
   }

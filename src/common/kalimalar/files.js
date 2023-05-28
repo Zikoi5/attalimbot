@@ -7,7 +7,7 @@ const {
 
 const kalimalar = {
   TOYYIBA_KALIMASI: {
-    title: "📋 Тоййиба калимаси",
+    title: "📋 Тоййиба",
     async handler(ctx) {
       const replyUserId = ctx?.update?.message?.from?.id;
 
@@ -22,7 +22,7 @@ const kalimalar = {
     },
   },
   SHAHODAT_KALIMASI: {
-    title: "📋 Шаҳодат калимаси",
+    title: "📋 Шаҳодат",
     async handler(ctx) {
       const replyUserId = ctx?.update?.message?.from?.id;
 
@@ -37,7 +37,7 @@ const kalimalar = {
     },
   },
   TAVHID_KALIMASI: {
-    title: "📋 Тавҳид калимаси",
+    title: "📋 Тавҳид",
     async handler(ctx) {
       const replyUserId = ctx?.update?.message?.from?.id;
 
@@ -74,7 +74,7 @@ const kalimalar = {
     },
   },
   RODDIL_KUFR_KALIMASI: {
-    title: "📋 Роддил куфр калимаси",
+    title: "📋 Роддил куфр",
     async handler(ctx) {
       const replyUserId = ctx?.update?.message?.from?.id;
 
@@ -111,7 +111,7 @@ const kalimalar = {
     },
   },
   ISTIGFOR_KALIMASI: {
-    title: "📋 Истиғфор калимаси",
+    title: "📋 Истиғфор",
     async handler(ctx) {
       const replyUserId = ctx?.update?.message?.from?.id;
 
@@ -148,7 +148,7 @@ const kalimalar = {
     },
   },
   TAMJID_KALIMASI: {
-    title: "📋 Тамжид калимаси",
+    title: "📋 Тамжид",
     async handler(ctx) {
       const replyUserId = ctx?.update?.message?.from?.id;
 
@@ -185,7 +185,7 @@ const kalimalar = {
     },
   },
   IYMON_KALIMASI: {
-    title: "📋 Иймон калимаси",
+    title: "📋 Иймон",
     async handler(ctx) {
       const replyUserId = ctx?.update?.message?.from?.id;
 
@@ -222,7 +222,7 @@ const kalimalar = {
     },
   },
   MUJMAL_KALIMASI: {
-    title: "📋 Мужмал калимаси",
+    title: "📋 Мужмал",
     async handler(ctx) {
       const replyUserId = ctx?.update?.message?.from?.id;
 
@@ -259,7 +259,7 @@ const kalimalar = {
     },
   },
   MUFASSAL_KALIMASI: {
-    title: "📋 Муфассал калимаси",
+    title: "📋 Муфассал",
     async handler(ctx) {
       const replyUserId = ctx?.update?.message?.from?.id;
 
