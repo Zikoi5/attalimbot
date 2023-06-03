@@ -38,7 +38,7 @@ async function sendArgsToChain({ ctx, replyList }) {
     return function () {
       return ctx.telegram
         .copyMessage(reply_user_id, from, message_id, {
-          protect_content: true,
+          protect_content: false
         })
         .then(({ message_id }) => {
           if (REMOVE_OLD_MESSAGES_BEFORE_LEAVE) {
@@ -48,7 +48,7 @@ async function sendArgsToChain({ ctx, replyList }) {
 
             ctx.scene.state.messages_to_delete = [
               ...ctx.scene.state.messages_to_delete,
-              message_id,
+              message_id
             ];
           }
         })
@@ -72,7 +72,7 @@ function replyPropsToList({ replyUserId, FROM_USER_ID, messageIdList }) {
   return messageIdList.map((message_id) => ({
     reply_user_id: replyUserId,
     from: FROM_USER_ID,
-    message_id,
+    message_id
   }));
 }
 
@@ -80,5 +80,5 @@ module.exports = {
   sendArgsToChain,
   removeCurrMessages,
   replyPropsToList,
-  chainPromises,
+  chainPromises
 };
