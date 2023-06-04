@@ -159,11 +159,9 @@ bot.hears(BACK_BUTTON, (ctx) => ctx.scene.enter("MAIN_SCENE"));
 bot.command("auth", (ctx) => ctx.scene.enter("AUTH_SCENE"));
 
 bot.on("message", (ctx) => {
+  console.log("ctx.message", ctx.message.message_id);
   //Fixme
-  if (
-    !ctx.session.current &&
-    ![MAIN_BUTTONS.DARSLAR_BTN, "Darslar"].includes(ctx.message.text)
-  ) {
+  if (!ctx.session.current) {
     ctx.scene.enter("MAIN_SCENE");
     return ctx;
   }

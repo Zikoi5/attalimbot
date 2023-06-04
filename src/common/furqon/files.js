@@ -36,6 +36,21 @@ const suralar = {
   //     });
   //   },
   // },
+  FATIHA_SURA: {
+    title: "Фотиҳа сураси",
+    async handler(ctx) {
+      const replyUserId = ctx?.update?.message?.from?.id;
+
+      sendArgsToChain({
+        replyList: replyPropsToList({
+          replyUserId,
+          FROM_USER_ID,
+          messageIdList: [593795]
+        }),
+        ctx
+      });
+    }
+  },
 
   NABA_SURA: {
     title: "Набаъ сураси",
@@ -483,7 +498,7 @@ const suralar = {
         ctx
       });
     }
-  }
+  },
 
   // QURAYSH_SURA: {
   //   title: "💬 Қурайш сураси",
@@ -501,6 +516,22 @@ const suralar = {
   //   },
   // },
 
+  QURAYSH_SURA: {
+    title: "Қурайш сураси",
+    async handler(ctx) {
+      const replyUserId = ctx?.update?.message?.from?.id;
+
+      sendArgsToChain({
+        replyList: replyPropsToList({
+          replyUserId,
+          FROM_USER_ID,
+          messageIdList: [593804]
+        }),
+        ctx
+      });
+    }
+  },
+
   // MAAUUN_SURA: {
   //   title: "💬 Мааъуун сураси",
   //   async handler(ctx) {
@@ -516,6 +547,22 @@ const suralar = {
   //     });
   //   },
   // },
+
+  MAAUUN_SURA: {
+    title: "Мааъуун сураси",
+    async handler(ctx) {
+      const replyUserId = ctx?.update?.message?.from?.id;
+
+      sendArgsToChain({
+        replyList: replyPropsToList({
+          replyUserId,
+          FROM_USER_ID,
+          messageIdList: [593803]
+        }),
+        ctx
+      });
+    }
+  },
 
   // KAVSAR_SURA: {
   //   title: "💬 Кавсар сураси",
@@ -533,6 +580,22 @@ const suralar = {
   //   },
   // },
 
+  KAVSAR_SURA: {
+    title: "Кавсар сураси",
+    async handler(ctx) {
+      const replyUserId = ctx?.update?.message?.from?.id;
+
+      sendArgsToChain({
+        replyList: replyPropsToList({
+          replyUserId,
+          FROM_USER_ID,
+          messageIdList: [593802]
+        }),
+        ctx
+      });
+    }
+  },
+
   // KAAFIRUUN_SURA: {
   //   title: "💬 Каафируун сураси",
   //   async handler(ctx) {
@@ -548,6 +611,22 @@ const suralar = {
   //     });
   //   },
   // },
+
+  KAAFIRUUN_SURA: {
+    title: "Каафируун сураси",
+    async handler(ctx) {
+      const replyUserId = ctx?.update?.message?.from?.id;
+
+      sendArgsToChain({
+        replyList: replyPropsToList({
+          replyUserId,
+          FROM_USER_ID,
+          messageIdList: [593801]
+        }),
+        ctx
+      });
+    }
+  },
 
   // NASR_SURA: {
   //   title: "💬 Наср сураси",
@@ -565,6 +644,22 @@ const suralar = {
   //   },
   // },
 
+  NASR_SURA: {
+    title: "Наср сураси",
+    async handler(ctx) {
+      const replyUserId = ctx?.update?.message?.from?.id;
+
+      sendArgsToChain({
+        replyList: replyPropsToList({
+          replyUserId,
+          FROM_USER_ID,
+          messageIdList: [593800]
+        }),
+        ctx
+      });
+    }
+  },
+
   // MASAD_SURA: {
   //   title: "💬 Масад сураси",
   //   async handler(ctx) {
@@ -580,6 +675,22 @@ const suralar = {
   //     });
   //   },
   // },
+
+  MASAD_SURA: {
+    title: "Масад сураси",
+    async handler(ctx) {
+      const replyUserId = ctx?.update?.message?.from?.id;
+
+      sendArgsToChain({
+        replyList: replyPropsToList({
+          replyUserId,
+          FROM_USER_ID,
+          messageIdList: [593799]
+        }),
+        ctx
+      });
+    }
+  },
 
   // IXLOS_SURA: {
   //   title: "💬 Ихлос сураси",
@@ -597,6 +708,22 @@ const suralar = {
   //   },
   // },
 
+  IXLOS_SURA: {
+    title: "Ихлос сураси",
+    async handler(ctx) {
+      const replyUserId = ctx?.update?.message?.from?.id;
+
+      sendArgsToChain({
+        replyList: replyPropsToList({
+          replyUserId,
+          FROM_USER_ID,
+          messageIdList: [593798]
+        }),
+        ctx
+      });
+    }
+  },
+
   // FALAQ_SURA: {
   //   title: "💬 Фалақ сураси",
   //   async handler(ctx) {
@@ -613,6 +740,22 @@ const suralar = {
   //   },
   // },
 
+  FALAQ_SURA: {
+    title: "Фалақ сураси",
+    async handler(ctx) {
+      const replyUserId = ctx?.update?.message?.from?.id;
+
+      sendArgsToChain({
+        replyList: replyPropsToList({
+          replyUserId,
+          FROM_USER_ID,
+          messageIdList: [593797]
+        }),
+        ctx
+      });
+    }
+  },
+
   // NAAS_SURA: {
   //   title: "💬 Наас сураси",
   //   async handler(ctx) {
@@ -628,6 +771,22 @@ const suralar = {
   //     });
   //   },
   // },
+
+  NAAS_SURA: {
+    title: "Наас сураси",
+    async handler(ctx) {
+      const replyUserId = ctx?.update?.message?.from?.id;
+
+      sendArgsToChain({
+        replyList: replyPropsToList({
+          replyUserId,
+          FROM_USER_ID,
+          messageIdList: [593796]
+        }),
+        ctx
+      });
+    }
+  }
 };
 
 const suralarKeys = Object.keys(suralar);

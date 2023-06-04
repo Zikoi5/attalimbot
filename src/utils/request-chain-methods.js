@@ -38,7 +38,7 @@ async function sendArgsToChain({ ctx, replyList }) {
     return function () {
       return ctx.telegram
         .copyMessage(reply_user_id, from, message_id, {
-          protect_content: false
+          protect_content: true
         })
         .then(({ message_id }) => {
           if (REMOVE_OLD_MESSAGES_BEFORE_LEAVE) {
