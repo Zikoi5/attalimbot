@@ -15,7 +15,8 @@ const suralar = {
         replyList: replyPropsToList({
           replyUserId,
           FROM_USER_ID,
-          messageIdList: [35792, 35793, 35794, 35795]
+          // messageIdList: [35792, 35793, 35794, 35795]
+          messageIdList: [35794, 35795]
         }),
         ctx
       });
