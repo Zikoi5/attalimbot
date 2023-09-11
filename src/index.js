@@ -159,7 +159,7 @@ bot.hears(BACK_BUTTON, (ctx) => ctx.scene.enter("MAIN_SCENE"));
 bot.command("auth", (ctx) => ctx.scene.enter("AUTH_SCENE"));
 
 bot.on("message", (ctx) => {
-  console.log("ctx.message", ctx.message.message_id);
+  // console.log("ctx.message", ctx.message.message_id);
   //Fixme
   if (!ctx.session.current) {
     ctx.scene.enter("MAIN_SCENE");
