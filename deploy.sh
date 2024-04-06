@@ -7,5 +7,6 @@ scp -r ./src $USER@$HOST:$PROJECT_PATH
 scp -r ./.eslintrc.js $USER@$HOST:$PROJECT_PATH
 scp -r ./.gitignore $USER@$HOST:$PROJECT_PATH
 scp -r ./package.json $USER@$HOST:$PROJECT_PATH
+scp -r ./tsconfig.json $USER@$HOST:$PROJECT_PATH
 
-# ssh $USER@$HOST "pm2 restart \"[Bot] At-talim\""
+ssh $USER@$HOST "source ~/.nvm/nvm.sh && pm2 restart \"[Bot] At-talim\""
